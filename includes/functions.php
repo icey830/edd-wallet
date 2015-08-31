@@ -143,7 +143,7 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
         $payment_data = edd_get_payment_meta( $id );
 
         if( ! edd_admin_notices_disabled( $id ) ) {
-            do_action( 'edd_admin_sale_notice', $id, $payment_data );
+            edd_wallet_send_admin_email( $id, $payment_data );
         }
 
         $from_name  = apply_filters( 'edd_purchase_from_name', $from_name, $id, $payment_data );
@@ -187,4 +187,39 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
     $emails->__set( 'from_email', $from_email );
 
     $emails->send( $to_email, $subject, $message );
+}
+
+
+/**
+ * Our custom admin email function
+ *
+ * @since       1.0.0
+ * @param       int $id The ID of a payment if user email, or the wallet user if admin email
+ * @param       int $item The wallet line item we are sending this for
+ * @return      void
+ */
+function edd_wallet_send_admin_email( $id = 0, $item = null ) {
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+
+    $payment_data = edd_get_payment_meta( $id );
+
+    $from_name  = apply_filters( 'edd_purchase_from_name', $from_name, $id, $payment_data );
+    $from_email = apply_filters( 'edd_purchase_from_address', $from_email, $id, $payment_data );
+        
+    $subject    = edd_get_option( 'wallet_admin_deposit_notification_subject', __( 'New deposit', 'edd-wallet' ) );
+    $subject    = apply_filters( 'edd_wallet_admin_deposit_notification_subject', wp_strip_all_tags( $subject ), $id );
+    $subject    = edd_wallet_do_email_tags( $subject, $id );
+
+    $message    = edd_get_option( 'wallet_admin_deposit_notification', __( 'Hello', 'edd-wallet' ) . "\n\n" . __( 'A deposit has been made.', 'edd-wallet' ) . "\n\n" . __( 'Deposited to: {fullname}', 'edd-wallet' ) . "\n" . __( 'Amount: {value}', 'edd-wallet' ) . "\n\n" . __( 'Thank you', 'edd-wallet' ) );
+    $message    = edd_wallet_do_email_tags( $message, $id );
+
+    $emails = EDD()->emails;
+
+    $emails->__set( 'from_name', $from_name );
+    $emails->__set( 'from_email', $from_email );
+    $emails->__set( 'heading', __( 'New Deposit!', 'edd-wallet' ) );
+
+    $emails->send( edd_get_admin_notice_emails(), $subject, $message );
 }

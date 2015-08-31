@@ -200,6 +200,20 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'type'  => 'rich_editor',
                     'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {value} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
                 ),
+                'wallet_admin_deposit_notification_subject' => array(
+                    'id'    => 'wallet_admin_deposit_notification_subject',
+                    'name'  => __( 'Admin Deposit Notification Subject', 'edd-wallet' ),
+                    'desc'  => __( 'Enter the subject line for admin notifications when users deposit funds.', 'edd-wallet' ),
+                    'type'  => 'text',
+                    'std'   => __( 'New depost', 'edd-wallet' )
+                ),
+                'wallet_admin_deposit_notification' => array(
+                    'id'    => 'wallet_admin_deposit_notification',
+                    'name'  => __( 'Admin Deposit Notification', 'edd-wallet' ),
+                    'desc'  => __( 'Enter the email that is sent to admins when a users deposit funds. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list(),
+                    'type'  => 'rich_editor',
+                    'std'   => __( 'Hello', 'edd-wallet' ) . "\n\n" . __( 'A deposit has been made.', 'edd-wallet' ) . "\n\n" . __( 'Deposited to: {fullname}', 'edd-wallet' ) . "\n" . __( 'Amount: {value}', 'edd-wallet' ) . "\n\n" . __( 'Thank you', 'edd-wallet' )
+                ),
                 'wallet_admin_deposit_receipt_subject' => array(
                     'id'    => 'wallet_admin_deposit_subject',
                     'name'  => __( 'Admin Deposit Subject', 'edd-wallet' ),
