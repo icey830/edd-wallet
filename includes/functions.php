@@ -156,7 +156,7 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
         $subject    = apply_filters( 'edd_wallet_receipt_subject', wp_strip_all_tags( $subject ), $id );
         $subject    = edd_wallet_do_email_tags( $subject, $id );
 
-        $message    = edd_get_option( 'wallet_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {price} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
+        $message    = edd_get_option( 'wallet_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {value} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
         $message    = edd_wallet_do_email_tags( $message, $id );
     } else {
         $id = $_GET['id'];
@@ -169,14 +169,14 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
             $subject    = apply_filters( 'edd_wallet_admin_deposit_subject', wp_strip_all_tags( $subject ), $id );
             $subject    = edd_wallet_do_email_tags( $subject, $item );
 
-            $message    = edd_get_option( 'wallet_admin_deposit_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {price}.', 'edd-wallet' ) . "\n\n{sitename}" );
+            $message    = edd_get_option( 'wallet_admin_deposit_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}" );
             $message    = edd_wallet_do_email_tags( $message, $item );
         } else {
             $subject    = edd_get_option( 'wallet_admin_withdraw_receipt_subject', __( 'Receipt for withdraw', 'edd-wallet' ) );
             $subject    = apply_filters( 'edd_wallet_admin_withdraw_subject', wp_strip_all_tags( $subject ), $id );
             $subject    = edd_wallet_do_email_tags( $subject, $item );
 
-            $message    = edd_get_option( 'wallet_admin_withdraw_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {price} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
+            $message    = edd_get_option( 'wallet_admin_withdraw_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
             $message    = edd_wallet_do_email_tags( $message, $item );
         }
     }

@@ -198,7 +198,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'name'  => __( 'Deposit Receipt', 'edd-wallet' ),
                     'desc'  => __( 'Enter the email that is sent to users after completion of a deposit. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list(),
                     'type'  => 'rich_editor',
-                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {price} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
+                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {value} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
                 ),
                 'wallet_admin_deposit_receipt_subject' => array(
                     'id'    => 'wallet_admin_deposit_subject',
@@ -212,7 +212,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'name'  => __( 'Admin Deposit Receipt', 'edd-wallet' ),
                     'desc'  => __( 'Enter the email that is sent to users after completion of a deposit by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
                     'type'  => 'rich_editor',
-                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {price}.', 'edd-wallet' ) . "\n\n{sitename}"
+                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}"
                 ),
                 'wallet_admin_withdraw_receipt_subject' => array(
                     'id'    => 'wallet_admin_withdraw_subject',
@@ -226,7 +226,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'name'  => __( 'Admin Withdraw Receipt', 'edd-wallet' ),
                     'desc'  => __( 'Enter the email that is sent to users after completion of a withdraw by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
                     'type'  => 'rich_editor',
-                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {price} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
+                    'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
                 )
             );
 

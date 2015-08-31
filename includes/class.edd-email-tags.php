@@ -290,9 +290,9 @@ function edd_wallet_setup_email_tags() {
 			'function'    => 'edd_wallet_email_tag_date'
 		),
 		array(
-			'tag'         => 'price',
-			'description' => __( 'The total price of the purchase', 'edd' ),
-			'function'    => 'edd_wallet_email_tag_price'
+			'tag'         => 'value',
+			'description' => __( 'The value of the deposit or withdrawal', 'edd' ),
+			'function'    => 'edd_wallet_email_tag_value'
 		),
 		array(
 			'tag'         => 'payment_id',
@@ -484,22 +484,22 @@ function edd_wallet_email_tag_date( $payment_id ) {
 
 
 /**
- * Email template tag: price
- * The total price of the purchase
+ * Email template tag: value
+ * The total value of the purchase
  *
  * @since       1.0.0
  * @param       int $payment_id
- * @return      string price
+ * @return      string value
  */
-function edd_wallet_email_tag_price( $payment_id ) {
+function edd_wallet_email_tag_value( $payment_id ) {
     if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        $price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
+        $value = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
     } else {
         $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $price = edd_currency_filter( edd_format_amount( $item->amount ) );
+        $value = edd_currency_filter( edd_format_amount( $item->amount ) );
     }
 
-	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
+	return html_entity_decode( $value, ENT_COMPAT, 'UTF-8' );
 }
 
 
