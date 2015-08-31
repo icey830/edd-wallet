@@ -159,8 +159,9 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
         $message    = edd_get_option( 'wallet_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {price} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
         $message    = edd_wallet_do_email_tags( $message, $id );
     } else {
+        $id = $_GET['id'];
         $user_data  = get_userdata( $id );
-
+        
         $to_email   = $user_data->user_email;
 
         if( $type == 'admin-deposit' ) {

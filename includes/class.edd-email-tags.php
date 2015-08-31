@@ -355,7 +355,8 @@ function edd_wallet_email_tag_first_name( $payment_id ) {
         $email_name   = edd_get_email_names( $payment_data['user_info'] );
         $name = $email_name['name'];
     } else {
-        $user_data = get_userdata( $payment_id->user_id );
+        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+        $user_data = get_userdata( $item->user_id );
         $name = $user_data->first_name;
     }
 
