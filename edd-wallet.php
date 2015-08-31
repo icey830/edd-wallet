@@ -228,16 +228,16 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'type'  => 'rich_editor',
                     'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}"
                 ),
-                'wallet_admin_withdraw_receipt_subject' => array(
-                    'id'    => 'wallet_admin_withdraw_subject',
-                    'name'  => __( 'Admin Withdraw Subject', 'edd-wallet' ),
-                    'desc'  => __( 'Enter the subject line for admin withdraw receipts.', 'edd-wallet' ),
+                'wallet_admin_withdrawal_receipt_subject' => array(
+                    'id'    => 'wallet_admin_withdrawal_subject',
+                    'name'  => __( 'Admin Withdrawal Subject', 'edd-wallet' ),
+                    'desc'  => __( 'Enter the subject line for admin withdrawal receipts.', 'edd-wallet' ),
                     'type'  => 'text',
-                    'std'   => __( 'Receipt for withdraw', 'edd-wallet' )
+                    'std'   => __( 'Receipt for withdrawal', 'edd-wallet' )
                 ),
-                'wallet_admin_withdraw_receipt' => array(
-                    'id'    => 'wallet_admin_withdraw_receipt',
-                    'name'  => __( 'Admin Withdraw Receipt', 'edd-wallet' ),
+                'wallet_admin_withdrawal_receipt' => array(
+                    'id'    => 'wallet_admin_withdrawal_receipt',
+                    'name'  => __( 'Admin Withdrawal Receipt', 'edd-wallet' ),
                     'desc'  => __( 'Enter the email that is sent to users after completion of a withdraw by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
                     'type'  => 'rich_editor',
                     'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}"

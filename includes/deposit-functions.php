@@ -212,7 +212,7 @@ function edd_wallet_edit_notice() {
     }
     
     if( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'wallet_withdraw_succeeded' && current_user_can( 'view_shop_reports' ) ) {
-        add_settings_error( 'edd-notices', 'edd-wallet-withdraw-succeeded', __( 'The withdraw has been made.', 'edd-wallet' ), 'updated' );
+        add_settings_error( 'edd-notices', 'edd-wallet-withdraw-succeeded', __( 'The withdrawal has been made.', 'edd-wallet' ), 'updated' );
     }
 
     if( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'wallet_deposit_failed' && current_user_can( 'view_shop_reports' ) ) {
