@@ -70,6 +70,12 @@ class EDD_Wallet_Gateway {
                 'std'       => __( 'My Wallet', 'edd-wallet' )
             ),
             array(
+                'id'        => 'edd_wallet_gateway_label_value',
+                'name'      => __( 'Display Value', 'edd-wallet' ),
+                'desc'      => __( 'Display the amount in the users\' wallet next to the gateway label', 'edd-wallet' ),
+                'type'      => 'checkbox'
+            ),
+            array(
                 'id'        => 'edd_wallet_deposit_description',
                 'name'      => __( 'Deposit Description', 'edd-wallet' ),
                 'desc'      => __( 'Customize how deposits are displayed in cart, enter {val} to display value', 'edd-wallet' ),
@@ -115,9 +121,18 @@ class EDD_Wallet_Gateway {
      * @return      array $gateways The updated gateway list
      */
     public function register_gateway( $gateways ) {
+        $user_id = get_current_user_id();
+        $value = get_user_meta( $user_id, '_edd_wallet_value', true );
+
+        $checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
+
+        if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true ) {
+            $checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
+        }
+
         $gateways['wallet'] = array(
             'admin_label'       => 'Wallet',
-            'checkout_label'    => edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) )
+            'checkout_label'    => $checkout_label
         );
 
         return $gateways;
