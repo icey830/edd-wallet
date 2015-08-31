@@ -106,7 +106,7 @@ function edd_wallet_process_admin_deposit() {
         $item = edd_wallet()->wallet->add( $args );
 
         // Maybe send email
-        if( $_POST['wallet-receipt'] == '1' ) {
+        if( isset( $_POST['wallet-receipt'] ) && $_POST['wallet-receipt'] == '1' ) {
             edd_wallet_send_email( $type, $_POST['wallet-user'], $item );
         }
     }
