@@ -1,0 +1,17 @@
+#edd_wallet_deposit_amount_wrapper {
+    width: 425px;
+}
+
+#edd_wallet_deposit_amount_wrapper ul li {
+    float: left;
+    margin-bottom: 15px;
+    width: 150px;
+}
+
+#edd_wallet_deposit_amount_wrapper li label {
+    font-size: 1.5em;
+}
+
+.edd_wallet_deposit_submit_wrapper {
+    clear: both;
+}
