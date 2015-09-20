@@ -133,7 +133,10 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
             }
 
             // Add email settings
-            add_filter( 'edd_settings_emails', array( $this, 'settings' ) );
+            add_filter( 'edd_settings_emails', array( $this, 'email_settings' ) );
+
+            // Add style settings
+            add_filter( 'edd_settings_styles', array( $this, 'style_settings' ) );
         }
 
 
@@ -178,10 +181,10 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
          * @param       array $settings The existing settings
          * @return      array $settings The updated settings
          */
-        public function settings( $settings ) {
+        public function email_settings( $settings ) {
             $new_settings = array(
-                'wallet_notifications_header' => array(
-                    'id'    => 'wallet_notifications_header',
+                'wallet_email_notifications_header' => array(
+                    'id'    => 'wallet_email_notifications_header',
                     'name'  => '<strong>' . __( 'Wallet Notifications', 'edd-wallet' ) . '</strong>',
                     'desc'  => __( 'Configure wallet notification emails', 'edd-wallet' ),
                     'type'  => 'header'
@@ -241,6 +244,34 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
                     'desc'  => __( 'Enter the email that is sent to users after completion of a withdraw by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
                     'type'  => 'rich_editor',
                     'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
+                )
+            );
+
+            return array_merge( $settings, $new_settings );
+        }
+
+
+        /**
+         * Register style settings
+         *
+         * @access      public
+         * @since       1.0.0
+         * @param       array $settings The existing settings
+         * @return      array $settings The updated settings
+         */
+        public function style_settings( $settings ) {
+            $new_settings = array(
+                'wallet_style_header' => array(
+                    'id'    => 'wallet_style_header',
+                    'name'  => '<strong>' . __( 'Wallet Styles', 'edd-wallet' ) . '</strong>',
+                    'desc'  => __( 'Configure wallet styles', 'edd-wallet' ),
+                    'type'  => 'header'
+                ),
+                array(
+                    'id'    => 'edd_wallet_disable_styles',
+                    'name'  => __( 'Disable Stylesheet', 'edd-wallet' ),
+                    'desc'  => __( 'Check to disable the deposit form stylesheet and use your own styles', 'edd-wallet' ),
+                    'type'  => 'checkbox'
                 )
             );
 

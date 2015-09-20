@@ -99,12 +99,6 @@ class EDD_Wallet_Gateway {
                     '200',
                     '500'
                 )
-            ),
-            array(
-                'id'        => 'edd_wallet_disable_styles',
-                'name'      => __( 'Disable Stylesheet', 'edd-wallet' ),
-                'desc'      => __( 'Check to disable the deposit form stylesheet and use your own styles', 'edd-wallet' ),
-                'type'      => 'checkbox'
             )
         );
 
