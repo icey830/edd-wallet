@@ -107,8 +107,8 @@ function edd_customer_wallet_view( $customer ) {
                             $actions = '<a title="' . __( 'View Details for Payment', 'edd-wallet' ) . ' ' . $item->payment_id . '" href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item->payment_id ) . '">' . __( 'View Details', 'edd-wallet' ) . '</a>';
                             $status = edd_get_payment_status( get_post( $item->payment_id ), true );
                             break;
-                        case 'payment':
-                            $type = __( 'Payment', 'edd-wallet' );
+                        case 'withdrawal':
+                            $type = __( 'Withdraw', 'edd-wallet' );
                             $item_id = $item->id . ' (' . $item->payment_id . ')';
                             $actions = '<a title="' . __( 'View Details for Payment', 'edd-wallet' ) . ' ' . $item->payment_id . '" href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item->payment_id ) . '">' . __( 'View Details', 'edd-wallet' ) . '</a>';
                             $status = edd_get_payment_status( get_post( $item->payment_id ), true );

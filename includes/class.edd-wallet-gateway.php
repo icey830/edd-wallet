@@ -219,13 +219,13 @@ class EDD_Wallet_Gateway {
 
             // Update wallet
             update_user_meta( $purchase_data['user_info']['id'], '_edd_wallet_value', $value );
-            
+
             // Record the payment
             $args = array(
                 'user_id'       => $purchase_data['user_info']['id'],
                 'payment_id'    => $payment,
-                'type'          => 'payment',
-                'amount'        => $value
+                'type'          => 'withdrawal',
+                'amount'        => (float) $payment_data['price']
             );
 
             edd_wallet()->wallet->add( $args );
