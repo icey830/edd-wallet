@@ -43,6 +43,9 @@ class EDD_Wallet_Gateway {
 
         // Process payment
         add_action( 'edd_gateway_wallet', array( $this, 'process_payment' ) );
+
+        // Override lifetime value increase
+        add_action( 'edd_customer_post_increase_value', array( $this, 'maybe_increase_value' ), 10, 3 );
     }
 
 
@@ -229,6 +232,26 @@ class EDD_Wallet_Gateway {
         } else {
             edd_record_gateway_error( __( 'Wallet Gateway Error', 'edd-wallet' ), sprintf( __( 'Payment creation failed while processing a Wallet purchase. Payment data: %s', 'edd-wallet' ), json_encode( $payment_data ) ), $payment );
             edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
+        }
+    }
+
+
+    /**
+     * Maybe increase customer value
+     *
+     * @access      public
+     * @since       1.0.0
+     * @param       float $purchase_value The new value
+     * @param       float $value The value to increase by
+     * @param       int $customer_id The customer ID
+     * @return      void
+     */
+    public function maybe_increase_value( $purchase_value, $value, $customer_id ) {
+        // Only adjust if this is a wallet purchase
+        if( isset( $_POST['payment-mode'] ) && $_POST['payment-mode'] == 'wallet' ) {
+            $customer = new EDD_Customer( $customer_id );
+
+            $customer->decrease_value( $value );
         }
     }
 
