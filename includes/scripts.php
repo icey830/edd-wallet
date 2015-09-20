@@ -52,5 +52,11 @@ function edd_wallet_scripts() {
     if( edd_get_option( 'edd_wallet_disable_styles', false ) != true ) {
         wp_enqueue_style( 'edd-wallet-deposit', EDD_WALLET_URL . 'assets/css/deposit' . $suffix . '.css', EDD_WALLET_VER );
     }
+
+    $fee = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+
+    if( $fee ) {
+        wp_enqueue_script( 'edd-wallet', EDD_WALLET_URL . 'assets/js/edd-wallet' . $suffix . '.js', EDD_WALLET_VER );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'edd_wallet_scripts' );
