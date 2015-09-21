@@ -125,6 +125,12 @@ function edd_customer_wallet_view( $customer ) {
                             $actions = '';
                             $status = __( 'Complete', 'edd-wallet' );
                             break;
+                        case 'refund':
+                            $type = __( 'Refund', 'edd-wallet' );
+                            $item_id = $item->id;
+                            $actions = '';
+                            $status = __( 'Complete', 'edd-wallet' );
+                            break;
                         default:
                             $type = apply_filters( 'edd_wallet_activity_type', $item->type, $item );
                             $item_id = apply_filters( 'edd_wallet_activity_item_id', $item->id, $item );

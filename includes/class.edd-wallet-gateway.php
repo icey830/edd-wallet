@@ -46,6 +46,9 @@ class EDD_Wallet_Gateway {
 
         // Override lifetime value increase
         add_action( 'edd_customer_post_increase_value', array( $this, 'maybe_increase_value' ), 10, 3 );
+
+        // Process refunds
+        add_action( 'edd_update_payment_status', array( $this, 'process_refund' ), 200, 3 );
     }
 
 
@@ -253,6 +256,53 @@ class EDD_Wallet_Gateway {
 
             $customer->decrease_value( $value );
         }
+    }
+
+
+    /**
+     * Process refunds
+     *
+     * @access      public
+     * @since       1.0.0
+     * @param       int $payment_id The ID of a payment
+     * @param       string $new_status The new status of the payment
+     * @param       string $old_status The old status of the payment
+     * @return      void
+     */
+    public function process_refund( $payment_id, $new_status, $old_status ) {
+        if( $old_status != 'publish' && $old_status != 'revoked' ) {
+            return;
+        }
+
+        if( $new_status != 'refunded' ) {
+            return;
+        }
+
+        if( edd_get_payment_gateway( $payment_id ) !== 'wallet' ) {
+            return;
+        }
+
+        $user_id        = edd_get_payment_user_id( $payment_id );
+        $refund_amount  = edd_get_payment_amount( $payment_id );
+        $user_value     = get_user_meta( $user_id, '_edd_wallet_value', true );
+
+
+        // Add the refund amount to the user wallet
+        $user_value = (float) $user_value + (float) $refund_amount;
+
+        update_user_meta( $user_id, '_edd_wallet_value', $user_value );
+
+        // Record the refund
+        $args = array(
+            'user_id'       => $user_id,
+            'type'          => 'refund',
+            'amount'        => (float) $refund_amount
+        );
+
+        edd_wallet()->wallet->add( $args );
+
+        // Insert payment note
+        edd_insert_payment_note( $payment_id, __( 'Refund completed to Wallet.', 'edd-wallet' ) );
     }
 
 
