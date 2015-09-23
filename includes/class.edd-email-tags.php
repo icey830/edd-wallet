@@ -261,67 +261,67 @@ function edd_wallet_setup_email_tags() {
 	$email_tags = array(
 		array(
 			'tag'         => 'name',
-			'description' => __( "The buyer's first name", 'edd' ),
+			'description' => __( "The buyer's first name", 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_first_name'
 		),
 		array(
 			'tag'         => 'fullname',
-			'description' => __( "The buyer's full name, first and last", 'edd' ),
+			'description' => __( "The buyer's full name, first and last", 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_fullname'
 		),
 		array(
 			'tag'         => 'username',
-			'description' => __( "The buyer's user name on the site, if they registered an account", 'edd' ),
+			'description' => __( "The buyer's user name on the site, if they registered an account", 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_username'
 		),
 		array(
 			'tag'         => 'user_email',
-			'description' => __( "The buyer's email address", 'edd' ),
+			'description' => __( "The buyer's email address", 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_user_email'
 		),
 		array(
 			'tag'         => 'billing_address',
-			'description' => __( 'The buyer\'s billing address', 'edd' ),
+			'description' => __( 'The buyer\'s billing address', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_billing_address'
 		),
 		array(
 			'tag'         => 'date',
-			'description' => __( 'The date of the purchase', 'edd' ),
+			'description' => __( 'The date of the purchase', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_date'
 		),
 		array(
 			'tag'         => 'value',
-			'description' => __( 'The value of the deposit or withdrawal', 'edd' ),
+			'description' => __( 'The value of the deposit or withdrawal', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_value'
 		),
 		array(
 			'tag'         => 'payment_id',
-			'description' => __( 'The unique ID number for this purchase', 'edd' ),
+			'description' => __( 'The unique ID number for this purchase', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_payment_id'
 		),
 		array(
 			'tag'         => 'receipt_id',
-			'description' => __( 'The unique ID number for this purchase receipt', 'edd' ),
+			'description' => __( 'The unique ID number for this purchase receipt', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_receipt_id'
 		),
 		array(
 			'tag'         => 'payment_method',
-			'description' => __( 'The method of payment used for this purchase', 'edd' ),
+			'description' => __( 'The method of payment used for this purchase', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_payment_method'
 		),
 		array(
 			'tag'         => 'sitename',
-			'description' => __( 'Your site name', 'edd' ),
+			'description' => __( 'Your site name', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_sitename'
 		),
 		array(
 			'tag'         => 'receipt_link',
-			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
+			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_receipt_link'
 		),
 		array(
 			'tag'         => 'ip_address',
-			'description' => __( 'The buyer\'s IP Address', 'edd' ),
+			'description' => __( 'The buyer\'s IP Address', 'edd-wallet' ),
 			'function'    => 'edd_wallet_email_tag_ip_address'
 		)
 	);
@@ -577,7 +577,7 @@ function edd_wallet_email_tag_sitename( $payment_id ) {
  */
 function edd_wallet_email_tag_receipt_link( $payment_id ) {
 	if( get_post_type( $payment_id ) == 'edd_payment' ) {
-		return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
+		return sprintf( __( '%1$sView it in your browser.%2$s', 'edd-wallet' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
 	} else {
 		return '';
 	}

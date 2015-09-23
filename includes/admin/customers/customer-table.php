@@ -26,7 +26,7 @@ function edd_wallet_customer_columns( $columns ) {
 	array_pop( $columns );
 
 	// Add the wallet column
-	$columns['wallet'] = __( 'Wallet', 'edd' );
+	$columns['wallet'] = __( 'Wallet', 'edd-wallet' );
 
 	// Re-add the date column
 	$columns = array_merge( $columns, $date );
