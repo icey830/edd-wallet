@@ -15,7 +15,7 @@
 
 // Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 class EDD_Wallet_Email_Template_Tags {
@@ -23,9 +23,9 @@ class EDD_Wallet_Email_Template_Tags {
 	/**
 	 * Container for storing all tags
 	 *
-	 * @since       1.0.0
+	 * @since	   1.0.0
 	 */
-    private $tags;
+	private $tags;
 
 
 	/**
@@ -33,17 +33,17 @@ class EDD_Wallet_Email_Template_Tags {
 	 *
 	 * @since       1.0.0
 	 */
-    private $payment_id;
+	private $payment_id;
 
 
 	/**
 	 * Add an email tag
-     *
-     * @access      public
+	 *
+	 * @access      public
 	 * @since       1.0.0
 	 * @param       string $tag Email tag to be replace in email
-     * @param       callable $func Hook to run when email tag is found
-     * @return      void
+	 * @param       callable $func Hook to run when email tag is found
+	 * @return      void
 	 */
 	public function add( $tag, $description, $func ) {
 		if( is_callable( $func ) ) {
@@ -58,8 +58,8 @@ class EDD_Wallet_Email_Template_Tags {
 
 	/**
 	 * Remove an email tag
-     *
-     * @access      public
+	 *
+	 * @access      public
 	 * @since       1.0.0
 	 * @param       string $tag Email tag to remove hook from
 	 */
@@ -70,8 +70,8 @@ class EDD_Wallet_Email_Template_Tags {
 
 	/**
 	 * Check if $tag is a registered email tag
-     *
-     * @access      public
+	 *
+	 * @access      public
 	 * @since       1.0.0
 	 * @param       string $tag Email tag that will be searched
 	 * @return      bool
@@ -83,8 +83,8 @@ class EDD_Wallet_Email_Template_Tags {
 
 	/**
 	 * Returns a list of all email tags
-     *
-     * @access      public
+	 *
+	 * @access      public
 	 * @since       1.0.0
 	 * @return      array
 	 */
@@ -95,10 +95,10 @@ class EDD_Wallet_Email_Template_Tags {
 
 	/**
 	 * Search content for email tags and filter email tags through their hooks
-     *
-     * @access      public
-     * @since       1.0.0
-     * @param       string $content Content to search for email tags
+	 *
+	 * @access      public
+	 * @since       1.0.0
+	 * @param       string $content Content to search for email tags
 	 * @param       int $payment_id The payment id
 	 * @return      string Content with email tags filtered out.
 	 */
@@ -109,11 +109,11 @@ class EDD_Wallet_Email_Template_Tags {
 			return $content;
 		}
 
-        $this->payment_id = $payment_id;
+		$this->payment_id = $payment_id;
 
 		$new_content = preg_replace_callback( "/{([A-z0-9\-\_]+)}/s", array( $this, 'do_tag' ), $content );
 
-        $this->payment_id = null;
+		$this->payment_id = null;
 
 		return $new_content;
 	}
@@ -121,13 +121,13 @@ class EDD_Wallet_Email_Template_Tags {
 
 	/**
 	 * Do a specific tag, this function should not be used. Please use edd_do_email_tags instead.
-     *
-     * @access      public
+	 *
+	 * @access      public
 	 * @since       1.0.0
-     * @param       string $m message
+	 * @param       string $m message
 	 * @return      mixed
 	 */
-    public function do_tag( $m ) {
+	public function do_tag( $m ) {
 		// Get tag
 		$tag = $m[1];
 
@@ -347,18 +347,18 @@ add_action( 'edd_wallet_add_email_tags', 'edd_wallet_setup_email_tags' );
  * @return      string name
  */
 function edd_wallet_email_tag_first_name( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-    	$payment_data = edd_get_payment_meta( $payment_id );
-	    if( empty( $payment_data['user_info'] ) ) {
-		    return '';
-    	}
-        $email_name   = edd_get_email_names( $payment_data['user_info'] );
-        $name = $email_name['name'];
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $user_data = get_userdata( $item->user_id );
-        $name = $user_data->first_name;
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$payment_data = edd_get_payment_meta( $payment_id );
+		if( empty( $payment_data['user_info'] ) ) {
+			return '';
+		}
+		$email_name   = edd_get_email_names( $payment_data['user_info'] );
+		$name = $email_name['name'];
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$user_data = get_userdata( $item->user_id );
+		$name = $user_data->first_name;
+	}
 
 	return $name;
 }
@@ -373,18 +373,18 @@ function edd_wallet_email_tag_first_name( $payment_id ) {
  * @return      string fullname
  */
 function edd_wallet_email_tag_fullname( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-    	$payment_data = edd_get_payment_meta( $payment_id );
-	    if( empty( $payment_data['user_info'] ) ) {
-		    return '';
-    	}
-        $email_name   = edd_get_email_names( $payment_data['user_info'] );
-        $name   = $email_name['fullname'];
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $user_data = get_userdata( $item->user_id );
-        $name = $user_data->first_name . ' ' . $user_data->last_name;
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$payment_data = edd_get_payment_meta( $payment_id );
+		if( empty( $payment_data['user_info'] ) ) {
+			return '';
+		}
+		$email_name   = edd_get_email_names( $payment_data['user_info'] );
+		$name   = $email_name['fullname'];
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$user_data = get_userdata( $item->user_id );
+		$name = $user_data->first_name . ' ' . $user_data->last_name;
+	}
 
 	return $name;
 }
@@ -399,18 +399,18 @@ function edd_wallet_email_tag_fullname( $payment_id ) {
  * @return      string username
  */
 function edd_wallet_email_tag_username( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-    	$payment_data = edd_get_payment_meta( $payment_id );
-	    if( empty( $payment_data['user_info'] ) ) {
-		    return '';
-    	}
-        $email_name   = edd_get_email_names( $payment_data['user_info'] );
-        $name = $email_name['username'];
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $user_data = get_userdata( $item->user_id );
-        $name = $user_data->user_login;
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$payment_data = edd_get_payment_meta( $payment_id );
+		if( empty( $payment_data['user_info'] ) ) {
+			return '';
+		}
+		$email_name   = edd_get_email_names( $payment_data['user_info'] );
+		$name = $email_name['username'];
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$user_data = get_userdata( $item->user_id );
+		$name = $user_data->user_login;
+	}
 
 	return $name;
 }
@@ -425,13 +425,13 @@ function edd_wallet_email_tag_username( $payment_id ) {
  * @return      string user_email
  */
 function edd_wallet_email_tag_user_email( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        return edd_get_payment_user_email( $payment_id );
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $user_data = get_userdata( $item->user_id );
-        return $user_data->user_email;
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		return edd_get_payment_user_email( $payment_id );
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$user_data = get_userdata( $item->user_id );
+		return $user_data->user_email;
+	}
 }
 
 
@@ -444,21 +444,21 @@ function edd_wallet_email_tag_user_email( $payment_id ) {
  * @return      string billing_address
  */
 function edd_wallet_email_tag_billing_address( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-    	$user_info    = edd_get_payment_meta_user_info( $payment_id );
-	    $user_address = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$user_info    = edd_get_payment_meta_user_info( $payment_id );
+		$user_address = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 
-    	$return = $user_address['line1'] . "\n";
-	    if( ! empty( $user_address['line2'] ) ) {
-		    $return .= $user_address['line2'] . "\n";
-    	}
-	    $return .= $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
-    	$return .= $user_address['country'];
+		$return = $user_address['line1'] . "\n";
+		if( ! empty( $user_address['line2'] ) ) {
+			$return .= $user_address['line2'] . "\n";
+		}
+		$return .= $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
+		$return .= $user_address['country'];
 
-        return $return;
-    } else {
-        return '';
-    }
+		return $return;
+	} else {
+		return '';
+	}
 }
 
 
@@ -471,13 +471,13 @@ function edd_wallet_email_tag_billing_address( $payment_id ) {
  * @return      string date
  */
 function edd_wallet_email_tag_date( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        $payment_data = edd_get_payment_meta( $payment_id );
-        $date = strtotime( $payment_data['date'] );
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $date = strtotime( $item->date_created );
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$payment_data = edd_get_payment_meta( $payment_id );
+		$date = strtotime( $payment_data['date'] );
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$date = strtotime( $item->date_created );
+	}
 
 	return date_i18n( get_option( 'date_format' ), strtotime( $date ) );
 }
@@ -492,12 +492,12 @@ function edd_wallet_email_tag_date( $payment_id ) {
  * @return      string value
  */
 function edd_wallet_email_tag_value( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        $value = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
-    } else {
-        $item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
-        $value = edd_currency_filter( edd_format_amount( $item->amount ) );
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		$value = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
+	} else {
+		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$value = edd_currency_filter( edd_format_amount( $item->amount ) );
+	}
 
 	return html_entity_decode( $value, ENT_COMPAT, 'UTF-8' );
 }
@@ -512,11 +512,11 @@ function edd_wallet_email_tag_value( $payment_id ) {
  * @return      int payment_id
  */
 function edd_wallet_email_tag_payment_id( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        return edd_get_payment_number( $payment_id );
-    } else {
-        return '';
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		return edd_get_payment_number( $payment_id );
+	} else {
+		return '';
+	}
 }
 
 
@@ -529,11 +529,11 @@ function edd_wallet_email_tag_payment_id( $payment_id ) {
  * @return      string receipt_id
  */
 function edd_wallet_email_tag_receipt_id( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        return edd_get_payment_key( $payment_id );
-    } else {
-        return '';
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		return edd_get_payment_key( $payment_id );
+	} else {
+		return '';
+	}
 }
 
 
@@ -546,11 +546,11 @@ function edd_wallet_email_tag_receipt_id( $payment_id ) {
  * @return      string gateway
  */
 function edd_wallet_email_tag_payment_method( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        return edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment_id ) );
-    } else {
-        return '';
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		return edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment_id ) );
+	} else {
+		return '';
+	}
 }
 
 
@@ -576,11 +576,11 @@ function edd_wallet_email_tag_sitename( $payment_id ) {
  * @return      string receipt_link
  */
 function edd_wallet_email_tag_receipt_link( $payment_id ) {
-    if( get_post_type( $payment_id ) == 'edd_payment' ) {
-        return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
-    } else {
-        return '';
-    }
+	if( get_post_type( $payment_id ) == 'edd_payment' ) {
+		return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
+	} else {
+		return '';
+	}
 }
 
 
