@@ -1,0 +1,487 @@
+# Copyright (C) 2015 Daniel J Griffiths
+# This file is distributed under the same license as the Easy Digital Downloads - Wallet package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads - Wallet 1.0.0\n"
+"Report-Msgid-Bugs-To: support@easydigitaldownloads.com\n"
+"POT-Creation-Date: 2015-09-23 08:26:28+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Easy Digital Downloads Team "
+"<support@easydigitaldownloads.com>\n"
+"Language-Team: Easy Digital Downloads Team "
+"<support@easydigitaldownloads.com>\n"
+"X-Generator: grunt-wp-i18n 0.5.3\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: edd-wallet.php:188
+msgid "Wallet Notifications"
+msgstr ""
+
+#: edd-wallet.php:189
+msgid "Configure wallet notification emails"
+msgstr ""
+
+#: edd-wallet.php:194
+msgid "Deposit Receipt Subject"
+msgstr ""
+
+#: edd-wallet.php:195
+msgid "Enter the subject line for user deposit receipts."
+msgstr ""
+
+#: edd-wallet.php:197 edd-wallet.php:225 includes/functions.php:155
+#: includes/functions.php:168
+msgid "Receipt for deposit"
+msgstr ""
+
+#: edd-wallet.php:201
+msgid "Deposit Receipt"
+msgstr ""
+
+#: edd-wallet.php:202
+msgid ""
+"Enter the email that is sent to users after completion of a deposit. HTML "
+"is accepted. Available template tags:"
+msgstr ""
+
+#: edd-wallet.php:204 edd-wallet.php:232 edd-wallet.php:246
+#: includes/functions.php:159 includes/functions.php:172
+#: includes/functions.php:179
+msgid "Dear"
+msgstr ""
+
+#: edd-wallet.php:204 includes/functions.php:159
+msgid "Thank you for your deposit. {value} has been added to your wallet."
+msgstr ""
+
+#: edd-wallet.php:208
+msgid "Admin Deposit Notification Subject"
+msgstr ""
+
+#: edd-wallet.php:209
+msgid "Enter the subject line for admin notifications when users deposit funds."
+msgstr ""
+
+#: edd-wallet.php:211
+msgid "New depost"
+msgstr ""
+
+#: edd-wallet.php:215
+msgid "Admin Deposit Notification"
+msgstr ""
+
+#: edd-wallet.php:216
+msgid ""
+"Enter the email that is sent to admins when a users deposit funds. HTML is "
+"accepted. Available template tags:"
+msgstr ""
+
+#: edd-wallet.php:218 includes/functions.php:215
+msgid "Hello"
+msgstr ""
+
+#: edd-wallet.php:218 includes/functions.php:215
+msgid "A deposit has been made."
+msgstr ""
+
+#: edd-wallet.php:218 includes/functions.php:215
+msgid "Deposited to: {fullname}"
+msgstr ""
+
+#: edd-wallet.php:218 includes/functions.php:215
+msgid "Amount: {value}"
+msgstr ""
+
+#: edd-wallet.php:218 includes/functions.php:215
+msgid "Thank you"
+msgstr ""
+
+#: edd-wallet.php:222
+msgid "Admin Deposit Subject"
+msgstr ""
+
+#: edd-wallet.php:223
+msgid "Enter the subject line for admin deposit receipts."
+msgstr ""
+
+#: edd-wallet.php:229
+msgid "Admin Deposit Receipt"
+msgstr ""
+
+#: edd-wallet.php:230
+msgid ""
+"Enter the email that is sent to users after completion of a deposit by the "
+"admin. HTML is accepted. Available template tags:"
+msgstr ""
+
+#: edd-wallet.php:232 includes/functions.php:172
+msgid "The site admin has credited your wallet {value}."
+msgstr ""
+
+#: edd-wallet.php:236
+msgid "Admin Withdrawal Subject"
+msgstr ""
+
+#: edd-wallet.php:237
+msgid "Enter the subject line for admin withdrawal receipts."
+msgstr ""
+
+#: edd-wallet.php:239
+msgid "Receipt for withdrawal"
+msgstr ""
+
+#: edd-wallet.php:243
+msgid "Admin Withdrawal Receipt"
+msgstr ""
+
+#: edd-wallet.php:244
+msgid ""
+"Enter the email that is sent to users after completion of a withdraw by the "
+"admin. HTML is accepted. Available template tags:"
+msgstr ""
+
+#: edd-wallet.php:246 includes/functions.php:179
+msgid "The site admin has deducted {value} from your wallet."
+msgstr ""
+
+#: edd-wallet.php:266
+msgid "Wallet Styles"
+msgstr ""
+
+#: edd-wallet.php:267
+msgid "Configure wallet styles"
+msgstr ""
+
+#: edd-wallet.php:272
+msgid "Disable Stylesheet"
+msgstr ""
+
+#: edd-wallet.php:273
+msgid "Check to disable the deposit form stylesheet and use your own styles"
+msgstr ""
+
+#: includes/admin/customers/customer-table.php:29
+msgid "Wallet"
+msgstr ""
+
+#: includes/admin/customers/customer-table.php:52
+msgid "View user wallet"
+msgstr ""
+
+#: includes/admin/customers/customers.php:41
+msgid "Customer Wallet"
+msgstr ""
+
+#: includes/admin/customers/customers.php:60
+msgid "%s - Wallet"
+msgstr ""
+
+#: includes/admin/customers/customers.php:69
+msgid "%s Available"
+msgstr ""
+
+#: includes/admin/customers/customers.php:80
+msgid "Recent Activity"
+msgstr ""
+
+#: includes/admin/customers/customers.php:89
+msgid "ID"
+msgstr ""
+
+#: includes/admin/customers/customers.php:90
+msgid "Type"
+msgstr ""
+
+#: includes/admin/customers/customers.php:91 includes/admin/pages.php:57
+msgid "Amount"
+msgstr ""
+
+#: includes/admin/customers/customers.php:92
+msgid "Date"
+msgstr ""
+
+#: includes/admin/customers/customers.php:93
+msgid "Status"
+msgstr ""
+
+#: includes/admin/customers/customers.php:94
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/customers/customers.php:105 includes/admin/pages.php:49
+msgid "Deposit"
+msgstr ""
+
+#: includes/admin/customers/customers.php:107
+#: includes/admin/customers/customers.php:113
+msgid "View Details for Payment"
+msgstr ""
+
+#: includes/admin/customers/customers.php:107
+#: includes/admin/customers/customers.php:113
+msgid "View Details"
+msgstr ""
+
+#: includes/admin/customers/customers.php:111 includes/admin/pages.php:50
+msgid "Withdraw"
+msgstr ""
+
+#: includes/admin/customers/customers.php:117
+msgid "Admin Deposit"
+msgstr ""
+
+#: includes/admin/customers/customers.php:120
+#: includes/admin/customers/customers.php:126
+#: includes/admin/customers/customers.php:132
+#: includes/admin/customers/customers.php:138
+msgid "Complete"
+msgstr ""
+
+#: includes/admin/customers/customers.php:123
+msgid "Admin Withdraw"
+msgstr ""
+
+#: includes/admin/customers/customers.php:129
+msgid "Refund"
+msgstr ""
+
+#: includes/admin/customers/customers.php:156
+msgid "No Activity Found"
+msgstr ""
+
+#: includes/admin/customers/customers.php:164 includes/admin/pages.php:23
+#: includes/admin/pages.php:38 includes/admin/pages.php:78
+msgid "Edit Wallet"
+msgstr ""
+
+#: includes/admin/pages.php:38
+msgid "Back to Details"
+msgstr ""
+
+#: includes/admin/pages.php:45
+msgid "Edit Type"
+msgstr ""
+
+#: includes/admin/pages.php:52
+msgid ""
+"Withdrawing funds simply removes them from the wallet and should be used "
+"with caution!"
+msgstr ""
+
+#: includes/admin/pages.php:61
+msgid "Enter the amount to deposit or withdraw."
+msgstr ""
+
+#: includes/admin/pages.php:66
+msgid "Send Receipt"
+msgstr ""
+
+#: includes/admin/pages.php:70
+msgid "Send the deposit receipt to the customer?"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:264
+msgid "The buyer's first name"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:269
+msgid "The buyer's full name, first and last"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:274
+msgid "The buyer's user name on the site, if they registered an account"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:279
+msgid "The buyer's email address"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:284
+msgid "The buyer's billing address"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:289
+msgid "The date of the purchase"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:294
+msgid "The value of the deposit or withdrawal"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:299
+msgid "The unique ID number for this purchase"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:304
+msgid "The unique ID number for this purchase receipt"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:309
+msgid "The method of payment used for this purchase"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:314
+msgid "Your site name"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:319
+msgid ""
+"Adds a link so users can view their receipt directly on your website if "
+"they are unable to view it in the browser correctly."
+msgstr ""
+
+#: includes/class.edd-email-tags.php:324
+msgid "The buyer's IP Address"
+msgstr ""
+
+#: includes/class.edd-email-tags.php:580
+msgid "%1$sView it in your browser.%2$s"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:67
+msgid "Wallet Settings"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:73
+msgid "Gateway Label"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:74
+msgid "Customize the gateway label"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:76
+#: includes/class.edd-wallet-gateway.php:127
+msgid "My Wallet"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:80
+msgid "Display Value"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:81
+msgid "Display the amount in the users' wallet next to the gateway label"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:86
+msgid "Deposit Description"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:87
+msgid "Customize how deposits are displayed in cart, enter {val} to display value"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:89 includes/deposit-functions.php:32
+msgid "Deposit to wallet"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:93
+msgid "Deposit Levels"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:94
+msgid "Specify the allowed deposit levels"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:97
+msgid "Select one or more deposit levels"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:130
+msgid "(%s available)"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:184
+msgid "Nonce verification has failed"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:184 includes/deposit-functions.php:25
+#: includes/deposit-functions.php:62
+msgid "Error"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:193
+#: includes/class.edd-wallet-gateway.php:236
+msgid "Wallet Gateway Error"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:193
+msgid "User wallet has insufficient funds."
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:194
+msgid "Insufficient funds."
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:236
+msgid "Payment creation failed while processing a Wallet purchase. Payment data: %s"
+msgstr ""
+
+#: includes/class.edd-wallet-gateway.php:305
+msgid "Refund completed to Wallet."
+msgstr ""
+
+#: includes/deposit-functions.php:25 includes/deposit-functions.php:62
+msgid "Nonce verification failed"
+msgstr ""
+
+#: includes/deposit-functions.php:211
+msgid "The deposit has been made."
+msgstr ""
+
+#: includes/deposit-functions.php:215
+msgid "The withdrawal has been made."
+msgstr ""
+
+#: includes/deposit-functions.php:219
+msgid "You can not withdraw more than the current balance."
+msgstr ""
+
+#: includes/deposit-functions.php:223
+msgid "Please enter a valid amount which is greater than 0."
+msgstr ""
+
+#: includes/functions.php:175
+msgid "Receipt for withdraw"
+msgstr ""
+
+#: includes/functions.php:211
+msgid "New deposit"
+msgstr ""
+
+#: includes/functions.php:222
+msgid "New Deposit!"
+msgstr ""
+
+#: includes/libraries/class.s214-edd-activation.php:84
+msgid " requires Easy Digital Downloads! Please activate it to continue!"
+msgstr ""
+
+#: includes/libraries/class.s214-edd-activation.php:86
+msgid " requires Easy Digital Downloads! Please install it to continue!"
+msgstr ""
+
+#: includes/scripts.php:34
+msgid "Type to search levels"
+msgstr ""
+
+#: includes/shortcodes.php:31
+msgid "Make Deposit"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Add a store credit system to Easy Digital Downloads"
+msgstr ""
