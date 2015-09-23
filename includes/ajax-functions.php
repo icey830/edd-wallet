@@ -15,7 +15,7 @@ if( ! defined( 'ABSPATH' ) ) {
 
 function edd_wallet_process_incentive() {
 	echo 'test';
-	edd_die();
+	edd_die('2');
 }
 add_action( 'wp_ajax_edd_wallet_process_incentive', 'edd_wallet_process_incentive' );
 add_action( 'wp_ajax_nopriv_edd_wallet_process_incentive', 'edd_wallet_process_incentive' );

@@ -59,7 +59,7 @@ function edd_wallet_scripts() {
 		wp_enqueue_script( 'edd-wallet', EDD_WALLET_URL . 'assets/js/edd-wallet' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
 	}
 
-	if( edd_get_option( 'edd_wallet_incentive_amount', 0 ) !== '0' ) {
+	if( (int) edd_get_option( 'edd_wallet_incentive_amount', 0 ) > 0 ) {
 		wp_enqueue_script( 'edd-wallet-incentives', EDD_WALLET_URL . 'assets/js/edd-wallet-incentives' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
 		wp_localize_script( 'edd-wallet-incentives', 'edd_wallet_incentives_vars', array(
 			'ajaxurl'       => admin_url( 'admin-ajax.php' )
