@@ -105,6 +105,34 @@ class EDD_Wallet_Gateway {
                     '200',
                     '500'
                 )
+            ),
+            array(
+                'id'        => 'edd_wallet_incentive_amount',
+                'name'      => __( 'Incentive Amount', 'edd-wallet' ),
+                'desc'      => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet.', 'edd-wallet' ),
+                'type'      => 'number',
+                'size'      => 'small',
+                'min'       => 0,
+                'step'      => 1,
+                'std'       => 0
+            ),
+            array(
+                'id'        => 'edd_wallet_incentive_type',
+                'name'      => __( 'Incentive Type', 'edd-wallet' ),
+                'desc'      => __( 'Specify whether incentives are a flat amount, or a percentage.', 'edd-wallet' ),
+                'type'      => 'select',
+                'options'   => array(
+                    'flatrate'  => __( 'Flat Rate', 'edd-wallet' ),
+                    'percent'   => __( 'Percentage', 'edd-wallet' )
+                ),
+                'std'       => 'flatrate'
+            ),
+            array(
+                'id'        => 'edd_wallet_incentive_description',
+                'name'      => __( 'Incentive Description', 'edd-wallet' ),
+                'desc'      => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),
+                'type'      => 'text',
+                'std'       => __( 'Wallet Incentive Discount', 'edd-wallet' )
             )
         );
 
