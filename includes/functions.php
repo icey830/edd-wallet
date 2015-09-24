@@ -223,3 +223,22 @@ function edd_wallet_send_admin_email( $id = 0, $item = null ) {
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message );
 }
+
+
+/**
+ * Incentives shouldn't be used on non-wallet purchases!
+ *
+ * @since		1.0.0
+ * @return		void
+ */
+function edd_wallet_maybe_remove_incentive() {
+	if( ! isset( $_GET['payment-mode'] ) || $_GET['payment-mode'] !== 'wallet' ) {
+		$incentive = EDD()->fees->get_fee( 'edd-wallet-incentive' );
+
+		// Only apply to wallet purchases!
+		if( $incentive ) {
+			EDD()->fees->remove_fee( 'edd-wallet-incentive' );
+		}
+	}
+}
+add_action( 'edd_before_checkout_cart', 'edd_wallet_maybe_remove_incentive' );

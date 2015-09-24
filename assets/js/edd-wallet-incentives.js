@@ -14,9 +14,18 @@ jQuery(document).ready(function ($) {
         };
 
         $.ajax({
-        	type: "POST",
+        	type: 'POST',
         	data: data,
-        	url: edd_wallet_incentives_vars.ajaxurl
+        	dataType: 'json',
+        	url: edd_wallet_incentives_vars.ajaxurl,
+        	success: function( response ) {
+        		console.log( response );
+        		$('#edd_checkout_cart_form').replaceWith(response.html);
+        	}
+        }).fail(function (data) {
+        	if( window.console && window.console.log ) {
+        		console.log(data);
+        	}
         });
     });
 });

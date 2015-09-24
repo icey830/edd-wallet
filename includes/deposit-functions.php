@@ -126,7 +126,7 @@ add_action( 'edd_wallet_process_admin_deposit', 'edd_wallet_process_admin_deposi
  * @return      void
  */
 function edd_wallet_clear_deposits_from_cart( $download_id, $options ) {
-	$deposit = EDD()->fees->get_fee( 'edd-wallet-deposit' ); 
+	$deposit = EDD()->fees->get_fee( 'edd-wallet-deposit' );
 
 	// Deposits and items can't be handled at the same time!
 	if( $deposit ) {
