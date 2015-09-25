@@ -20,13 +20,16 @@ if( ! defined( 'ABSPATH' ) ) {
  * @return		void
  */
 function edd_wallet_maybe_remove_incentive() {
-	if( ! isset( $_GET['payment-mode'] ) || $_GET['payment-mode'] !== 'wallet' ) {
-		if( EDD()->session->get( 'wallet_has_incentives' ) ){
-			EDD()->session->set( 'wallet_has_incentives', null );
-		}
+	
+	if( ! function_exists( 'edd_is_checkout' ) ) {
+		return;
+	}
+
+	if( edd_get_chosen_gateway() !== 'wallet' ) {
+		EDD()->session->set( 'wallet_has_incentives', null );
 	}
 }
-//add_action( 'edd_before_checkout_cart', 'edd_wallet_maybe_remove_incentive' );
+add_action( 'init', 'edd_wallet_maybe_remove_incentive' );
 
 
 
