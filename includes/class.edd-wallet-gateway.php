@@ -128,6 +128,12 @@ class EDD_Wallet_Gateway {
 				'std'       => 'flatrate'
 			),
 			array(
+				'id'        => 'edd_wallet_incentive_quantities',
+				'name'      => __( 'Quantity Support', 'edd-wallet' ),
+				'desc'      => __( 'By default, incentives only apply once per item. Check this to include quantities in calculations.', 'edd-wallet' ),
+				'type'      => 'checkbox'
+			),
+			array(
 				'id'        => 'edd_wallet_incentive_description',
 				'name'      => __( 'Incentive Description', 'edd-wallet' ),
 				'desc'      => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),

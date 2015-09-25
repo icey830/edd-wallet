@@ -72,7 +72,16 @@ function edd_wallet_item_incentive_amount( $discount, $item ) {
 		}
 
 		$incentive_amount = ( $price * $incentive_amount );
+
+		if( edd_item_quantities_enabled() && edd_get_option( 'edd_wallet_incentive_quantities', false ) ) {
+			$incentive_amount *= $item['quantity'];
+		}
+
 		$incentive_amount = number_format( $incentive_amount, 2, '.', '' );
+	} else {
+		if( edd_item_quantities_enabled() && edd_get_option( 'edd_wallet_incentive_quantities', false ) ) {
+			$incentive_amount *= $item['quantity'];
+		}
 	}
 
 	$discount += $incentive_amount;
