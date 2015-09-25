@@ -20,7 +20,6 @@ if( ! defined( 'ABSPATH' ) ) {
  * @return		void
  */
 function edd_wallet_maybe_remove_incentive() {
-	
 	if( ! function_exists( 'edd_is_checkout' ) ) {
 		return;
 	}
@@ -85,13 +84,14 @@ add_filter( 'edd_get_cart_content_details_item_discount_amount', 'edd_wallet_ite
 /**
  * Displays the incentive discount row on the cart
  *
- * @since 1.0.1
- * @return void
+ * @since		1.0.1
+ * @return		void
  */
 function edd_wallet_cart_items_renewal_row() {
 
-	$incentive_type   = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
-	$incentive_amount = edd_get_option( 'edd_wallet_incentive_amount', 0 );
+	$incentive_type        = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
+	$incentive_amount      = edd_get_option( 'edd_wallet_incentive_amount', 0 );
+	$incentive_description = edd_get_option( 'edd_wallet_incentive_description', __( 'Wallet Discount', 'edd-wallet' ) );
 
 	if( $incentive_amount <= 0 ) {
 		return;
@@ -102,16 +102,13 @@ function edd_wallet_cart_items_renewal_row() {
 	}
 
 	if( $incentive_type == 'percent' ) {
-
 		$discount = $incentive_amount . '%';
-
 	} else {
 		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount ) );
-
 	}
 ?>
 	<tr class="edd_cart_footer_row edd_wallet_incentive_row">
-		<td colspan="3"><?php printf( __( 'Wallet discount: %s', 'edd_sl' ), $discount ); ?></td>
+		<td colspan="3"><?php printf( __( '%1$s: %2$s', 'edd-wallet' ), $incentive_description, $discount ); ?></td>
 	</tr>
 <?php
 }

@@ -132,7 +132,7 @@ class EDD_Wallet_Gateway {
 				'name'      => __( 'Incentive Description', 'edd-wallet' ),
 				'desc'      => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),
 				'type'      => 'text',
-				'std'       => __( 'Wallet Incentive Discount', 'edd-wallet' )
+				'std'       => __( 'Wallet Discount', 'edd-wallet' )
 			)
 		);
 
