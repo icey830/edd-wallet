@@ -106,7 +106,7 @@ function edd_wallet_cart_items_renewal_row() {
 		$discount = $incentive_amount . '%';
 
 	} else {
-		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount * edd_get_cart_quantity() ) );
+		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount ) );
 
 	}
 ?>
