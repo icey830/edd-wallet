@@ -29,7 +29,7 @@ function edd_wallet_maybe_remove_incentive() {
 		EDD()->session->set( 'wallet_has_incentives', null );
 	}
 }
-add_action( 'init', 'edd_wallet_maybe_remove_incentive' );
+add_action( 'init', 'edd_wallet_maybe_remove_incentive', -9999 );
 
 
 
