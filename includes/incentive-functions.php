@@ -112,7 +112,7 @@ function edd_wallet_cart_items_renewal_row() {
 	if( $incentive_type == 'percent' ) {
 		$discount = $incentive_amount . '%';
 	} else {
-		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount ) );
+		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount * edd_get_cart_quantity() ) );
 	}
 ?>
 	<tr class="edd_cart_footer_row edd_wallet_incentive_row">
