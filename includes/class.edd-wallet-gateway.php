@@ -44,9 +44,6 @@ class EDD_Wallet_Gateway {
 		// Process payment
 		add_action( 'edd_gateway_wallet', array( $this, 'process_payment' ) );
 
-		// Override lifetime value increase
-		add_action( 'edd_customer_post_increase_value', array( $this, 'maybe_increase_value' ), 10, 3 );
-
 		// Process refunds
 		add_action( 'edd_update_payment_status', array( $this, 'process_refund' ), 200, 3 );
 	}
@@ -156,7 +153,7 @@ class EDD_Wallet_Gateway {
 	 */
 	public function register_gateway( $gateways ) {
 		$user_id = get_current_user_id();
-		$value = get_user_meta( $user_id, '_edd_wallet_value', true );
+		$value = edd_wallet()->wallet->balance( $user_id );
 
 		$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
 
@@ -188,7 +185,7 @@ class EDD_Wallet_Gateway {
 			$user_id = get_current_user_id();
 
 			// Get the wallet value
-			$value = get_user_meta( $user_id, '_edd_wallet_value', true );
+			$value = edd_wallet()->wallet->balance( $user_id );
 
 			// Get the cart total
 			$total = edd_get_cart_total();
@@ -221,7 +218,7 @@ class EDD_Wallet_Gateway {
 		$error = false;
 
 		// Double check that we can afford this item
-		$value = get_user_meta( $purchase_data['user_info']['id'], '_edd_wallet_value', true );
+		$value = edd_wallet()->wallet->balance( $purchase_data['user_email'] );
 
 		if( $value < $purchase_data['price'] ) {
 			edd_record_gateway_error( __( 'Wallet Gateway Error', 'edd-wallet' ), __( 'User wallet has insufficient funds.', 'edd-wallet' ), 0 );
@@ -241,9 +238,6 @@ class EDD_Wallet_Gateway {
 			'status'        => 'pending'
 		);
 
-		// Subtract the payment from the user wallet
-		$value = (float) $value - (float) $payment_data['price'];
-
 		// Record the pending payment
 		$payment = edd_insert_payment( $payment_data );
 
@@ -251,44 +245,14 @@ class EDD_Wallet_Gateway {
 			// Update payment status
 			edd_update_payment_status( $payment, 'publish' );
 
-			// Update wallet
-			update_user_meta( $purchase_data['user_info']['id'], '_edd_wallet_value', $value );
-
-			// Record the payment
-			$args = array(
-				'user_id'       => $purchase_data['user_info']['id'],
-				'payment_id'    => $payment,
-				'type'          => 'withdrawal',
-				'amount'        => (float) $payment_data['price']
-			);
-
-			edd_wallet()->wallet->add( $args );
+			// Withdraw the funds
+			edd_wallet()->wallet->withdraw( $purchase_data['user_info']['id'], $payment_data['price'], 'withdrawal', $payment );
 
 			edd_empty_cart();
 			edd_send_to_success_page();
 		} else {
 			edd_record_gateway_error( __( 'Wallet Gateway Error', 'edd-wallet' ), sprintf( __( 'Payment creation failed while processing a Wallet purchase. Payment data: %s', 'edd-wallet' ), json_encode( $payment_data ) ), $payment );
 			edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
-		}
-	}
-
-
-	/**
-	 * Maybe increase customer value
-	 *
-	 * @access      public
-	 * @since       1.0.0
-	 * @param       float $purchase_value The new value
-	 * @param       float $value The value to increase by
-	 * @param       int $customer_id The customer ID
-	 * @return      void
-	 */
-	public function maybe_increase_value( $purchase_value, $value, $customer_id ) {
-		// Only adjust if this is a wallet purchase
-		if( isset( $_POST['payment-mode'] ) && $_POST['payment-mode'] == 'wallet' ) {
-			$customer = new EDD_Customer( $customer_id );
-
-			$customer->decrease_value( $value );
 		}
 	}
 
@@ -318,22 +282,9 @@ class EDD_Wallet_Gateway {
 
 		$user_id        = edd_get_payment_user_id( $payment_id );
 		$refund_amount  = edd_get_payment_amount( $payment_id );
-		$user_value     = get_user_meta( $user_id, '_edd_wallet_value', true );
 
-
-		// Add the refund amount to the user wallet
-		$user_value = (float) $user_value + (float) $refund_amount;
-
-		update_user_meta( $user_id, '_edd_wallet_value', $user_value );
-
-		// Record the refund
-		$args = array(
-			'user_id'       => $user_id,
-			'type'          => 'refund',
-			'amount'        => (float) $refund_amount
-		);
-
-		edd_wallet()->wallet->add( $args );
+		// Deposit the funds
+		edd_wallet()->wallet->deposit( $user_id, $refund_amount, 'refund' );
 
 		// Insert payment note
 		edd_insert_payment_note( $payment_id, __( 'Refund completed to Wallet.', 'edd-wallet' ) );

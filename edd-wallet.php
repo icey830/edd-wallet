@@ -43,10 +43,10 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 
 
 		/**
-		 * @var         object $wallet EDD Wallet DB object
+		 * @var         object $db EDD Wallet DB object
 		 * @since       1.0.0
 		 */
-		public $wallet;
+		public $db;
 
 
 		/**
@@ -54,6 +54,13 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 * @since       1.0.0
 		 */
 		public $email_tags;
+
+
+		/**
+		 * @var			object $wallet EDD Wallet Helper object
+		 * @since		1.0.1
+		 */
+		public $wallet;
 
 
 		/**
@@ -70,8 +77,9 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 				self::$instance->load_textdomain();
 				self::$instance->includes();
 				self::$instance->hooks();
-				self::$instance->wallet = new EDD_DB_Wallet();
-				self::$instance->email_tags = new EDD_Email_Template_Tags();
+				self::$instance->db = new EDD_DB_Wallet();
+				self::$instance->email_tags = new EDD_Wallet_Email_Template_Tags();
+				self::$instance->wallet = new EDD_Wallet_Helper();
 			}
 
 			return self::$instance;
@@ -107,6 +115,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 			require_once EDD_WALLET_DIR . 'includes/shortcodes.php';
 			require_once EDD_WALLET_DIR . 'includes/deposit-functions.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-wallet-gateway.php';
+			require_once EDD_WALLET_DIR . 'includes/class.edd-wallet-helper.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-db-wallet.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-email-tags.php';
 			require_once EDD_WALLET_DIR . 'includes/ajax-functions.php';

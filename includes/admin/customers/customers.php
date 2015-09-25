@@ -61,7 +61,7 @@ function edd_customer_wallet_view( $customer ) {
 	</div>
 
 	<?php do_action( 'edd_customer_wallet_before_stats', $customer ); ?>
-	<?php $value = get_user_meta( $customer->id, '_edd_wallet_value', true ); ?>
+	<?php $value = edd_wallet()->wallet->balance( $customer->id ); ?>
 
 	<div id="wallet-stats-wrapper" class="customer-section">
 		<ul>

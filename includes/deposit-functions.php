@@ -69,21 +69,15 @@ function edd_wallet_process_admin_deposit() {
 	}
 
 	// Get the current value of their wallet
-	$value = get_user_meta( $_POST['wallet-user'], '_edd_wallet_value', true );
+	$value = edd_wallet()->wallet->balance( $_POST['wallet-user'] );
 	$value = ( $value ? $value : 0 );
 
 	// Adjust their balance
 	if( $_POST['wallet-edit-type'] == 'admin-deposit' ) {
-		// Add the deposit value
-		$value = $value + (float) $_POST['wallet-amount'];
-
 		// Setup the edit type
 		$type = 'admin-deposit';
 		$message = 'wallet_deposit_succeeded';
 	} else {
-		// Subtract the withdraw value
-		$value = $value - (float) $_POST['wallet-amount'];
-
 		// Setup the edit type
 		$type = 'admin-withdraw';
 		$message = 'wallet_withdraw_succeeded';
@@ -92,18 +86,13 @@ function edd_wallet_process_admin_deposit() {
 	if( $value < 0 ) {
 		$message = 'wallet_deposit_failed';
 	} else {
-		// Update the user wallet
-		update_user_meta( $_POST['wallet-user'], '_edd_wallet_value', $value );
-
-		// Record the deposit
-		$args = array(
-			'user_id'       => $_POST['wallet-user'],
-			'payment_id'    => 0,
-			'type'          => $type,
-			'amount'        => $_POST['wallet-amount']
-		);
-
-		$item = edd_wallet()->wallet->add( $args );
+		if( $type == 'admin-deposit' ) {
+			// Deposit the funds
+			edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+		} else {
+			// Withdraw the funds
+			edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+		}
 
 		// Maybe send email
 		if( isset( $_POST['wallet-receipt'] ) && $_POST['wallet-receipt'] == '1' ) {
@@ -158,25 +147,8 @@ function edd_wallet_add_funds( $payment_id ) {
 			// Get the ID of the purchaser
 			$user_id = edd_get_payment_user_id( $payment_id );
 
-			// Get the current value of their wallet
-			$value = get_user_meta( $user_id, '_edd_wallet_value', true );
-			$value = ( $value ? $value : 0 );
-
-			// Add the deposit value
-			$value = $value + $fees[0]['amount'];
-
-			// Update the user wallet
-			update_user_meta( $user_id, '_edd_wallet_value', $value );
-
-			// Record the deposit
-			$args = array(
-				'user_id'       => $user_id,
-				'payment_id'    => $payment_id,
-				'type'          => 'deposit',
-				'amount'        => $fees[0]['amount']
-			);
-
-			edd_wallet()->wallet->add( $args );
+			// Deposit the funds
+			edd_wallet()->wallet->deposit( $user_id, $fees[0]['amount'], 'deposit', $payment_id );
 
 			// Tag the payment so we can find it later
 			edd_update_payment_meta( $payment_id, '_edd_wallet_deposit', $user_id );
@@ -194,7 +166,7 @@ add_action( 'edd_complete_purchase', 'edd_wallet_add_funds' );
  * @return      array $activity The wallet activity
  */
 function edd_wallet_get_activity( $user_id ) {
-	$activity = edd_wallet()->wallet->get_customer_wallet( $user_id );
+	$activity = edd_wallet()->db->get_customer_wallet( $user_id );
 
 	return $activity;
 }

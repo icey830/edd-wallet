@@ -355,7 +355,7 @@ function edd_wallet_email_tag_first_name( $payment_id ) {
 		$email_name   = edd_get_email_names( $payment_data['user_info'] );
 		$name = $email_name['name'];
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$user_data = get_userdata( $item->user_id );
 		$name = $user_data->first_name;
 	}
@@ -381,7 +381,7 @@ function edd_wallet_email_tag_fullname( $payment_id ) {
 		$email_name   = edd_get_email_names( $payment_data['user_info'] );
 		$name   = $email_name['fullname'];
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$user_data = get_userdata( $item->user_id );
 		$name = $user_data->first_name . ' ' . $user_data->last_name;
 	}
@@ -407,7 +407,7 @@ function edd_wallet_email_tag_username( $payment_id ) {
 		$email_name   = edd_get_email_names( $payment_data['user_info'] );
 		$name = $email_name['username'];
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$user_data = get_userdata( $item->user_id );
 		$name = $user_data->user_login;
 	}
@@ -428,7 +428,7 @@ function edd_wallet_email_tag_user_email( $payment_id ) {
 	if( get_post_type( $payment_id ) == 'edd_payment' ) {
 		return edd_get_payment_user_email( $payment_id );
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$user_data = get_userdata( $item->user_id );
 		return $user_data->user_email;
 	}
@@ -475,7 +475,7 @@ function edd_wallet_email_tag_date( $payment_id ) {
 		$payment_data = edd_get_payment_meta( $payment_id );
 		$date = strtotime( $payment_data['date'] );
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$date = strtotime( $item->date_created );
 	}
 
@@ -495,7 +495,7 @@ function edd_wallet_email_tag_value( $payment_id ) {
 	if( get_post_type( $payment_id ) == 'edd_payment' ) {
 		$value = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ), edd_get_payment_currency_code( $payment_id ) );
 	} else {
-		$item = edd_wallet()->wallet->get_customer_wallet_item( $payment_id );
+		$item = edd_wallet()->db->get_customer_wallet_item( $payment_id );
 		$value = edd_currency_filter( edd_format_amount( $item->amount ) );
 	}
 
