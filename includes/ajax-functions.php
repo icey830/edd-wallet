@@ -14,53 +14,31 @@ if( ! defined( 'ABSPATH' ) ) {
 
 
 function edd_wallet_process_incentive() {
-	$value = edd_get_option( 'edd_wallet_incentive_amount', 0 );
-
-	if( $value > 1 ) {
-		if( $_REQUEST['gateway'] == 'wallet' ) {
-			// Setup the discount label
-			$label = edd_get_option( 'edd_wallet_incentive_description', __( 'Wallet Incentive Discount', 'edd-wallet' ) );
-			$type  = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
-
-			// Setup the fee (product) for the incentive
-			$incentive = array(
-				'amount'        => -$value,
-				'label'         => $label,
-				'type'          => 'fee',
-				'no_tax'        => true,
-				'id'            => 'edd-wallet-incentive'
-			);
-
-			EDD()->fees->add_fee( $incentive );
-		} else {
-			$incentive = EDD()->fees->get_fee( 'edd-wallet-incentive' );
-
-			// Only apply to wallet purchases!
-			if( $incentive ) {
-				EDD()->fees->remove_fee( 'edd-wallet-incentive' );
-			}
-		}
-
-		// Refresh the cart
-		if ( empty( $_POST['billing_country'] ) ) {
-			$_POST['billing_country'] = edd_get_shop_country();
-		}
-
-		ob_start();
-		edd_checkout_cart();
-		$cart = ob_get_clean();
-		$response = array(
-			'html'         => $cart,
-			'tax_raw'      => edd_get_cart_tax(),
-			'tax'          => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
-			'tax_rate_raw' => edd_get_tax_rate(),
-			'tax_rate'     => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
-			'total'        => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
-			'total_raw'    => edd_get_cart_total(),
-		);
-
-		echo json_encode( $response );
+	if( $_REQUEST['gateway'] == 'wallet' ) {
+		EDD()->session->set( 'wallet_has_incentives', '1' );
+	} else {
+		EDD()->session->set( 'wallet_has_incentives', null );
 	}
+
+	// Refresh the cart
+	if ( empty( $_POST['billing_country'] ) ) {
+		$_POST['billing_country'] = edd_get_shop_country();
+	}
+
+	ob_start();
+	edd_checkout_cart();
+	$cart = ob_get_clean();
+	$response = array(
+		'html'         => $cart,
+		'tax_raw'      => edd_get_cart_tax(),
+		'tax'          => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
+		'tax_rate_raw' => edd_get_tax_rate(),
+		'tax_rate'     => html_entity_decode( edd_get_formatted_tax_rate(), ENT_COMPAT, 'UTF-8' ),
+		'total'        => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
+		'total_raw'    => edd_get_cart_total(),
+	);
+
+	echo json_encode( $response );
 
 	edd_die();
 }

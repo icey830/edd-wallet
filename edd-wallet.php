@@ -110,6 +110,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 			require_once EDD_WALLET_DIR . 'includes/class.edd-db-wallet.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-email-tags.php';
 			require_once EDD_WALLET_DIR . 'includes/ajax-functions.php';
+			require_once EDD_WALLET_DIR . 'includes/incentive-functions.php';
 
 			if( is_admin() ) {
 				require_once EDD_WALLET_DIR . 'includes/admin/pages.php';

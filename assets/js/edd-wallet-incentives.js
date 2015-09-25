@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
     $('input[name="payment-mode"]').change(function () {
         var gateway;
 
-        gateway = $('input[name="payment-mode"]').val();
+        gateway = $(this).val();
 
         var data = {
             action: 'edd_wallet_process_incentive',
