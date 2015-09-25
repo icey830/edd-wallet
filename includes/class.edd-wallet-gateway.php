@@ -129,7 +129,7 @@ class EDD_Wallet_Gateway {
 			),
 			array(
 				'id'        => 'edd_wallet_incentive_quantities',
-				'name'      => __( 'Quantity Support', 'edd-wallet' ),
+				'name'      => __( 'Incentive Quantities', 'edd-wallet' ),
 				'desc'      => __( 'By default, incentives only apply once per item. Check this to include quantities in calculations.', 'edd-wallet' ),
 				'type'      => 'checkbox'
 			),
