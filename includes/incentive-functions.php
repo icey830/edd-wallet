@@ -67,9 +67,8 @@ function edd_wallet_item_incentive_amount( $discount, $item ) {
 	$incentive_type = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
 
 	if( $incentive_type == 'percent' ) {
-		if( $incentive_amount > 1 ) {
-			$incentive_amount /= 100;
-		}
+
+		$incentive_amount /= 100;
 
 		$incentive_amount = ( $price * $incentive_amount );
 

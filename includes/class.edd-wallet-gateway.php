@@ -106,7 +106,7 @@ class EDD_Wallet_Gateway {
 			array(
 				'id'        => 'edd_wallet_incentive_amount',
 				'name'      => __( 'Incentive Amount', 'edd-wallet' ),
-				'desc'      => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet.', 'edd-wallet' ),
+				'desc'      => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet. Example: 10 = 10%', 'edd-wallet' ),
 				'type'      => 'number',
 				'size'      => 'small',
 				'min'       => 0,
