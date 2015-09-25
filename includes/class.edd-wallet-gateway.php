@@ -113,7 +113,7 @@ class EDD_Wallet_Gateway {
 				'type'      => 'number',
 				'size'      => 'small',
 				'min'       => 0,
-				'step'      => 1,
+				'step'      => .01,
 				'std'       => 0
 			),
 			array(
