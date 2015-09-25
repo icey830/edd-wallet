@@ -81,3 +81,38 @@ function edd_wallet_item_incentive_amount( $discount, $item ) {
 	return $discount;
 }
 add_filter( 'edd_get_cart_content_details_item_discount_amount', 'edd_wallet_item_incentive_amount', 10, 2 );
+
+/**
+ * Displays the incentive discount row on the cart
+ *
+ * @since 1.0.1
+ * @return void
+ */
+function edd_wallet_cart_items_renewal_row() {
+
+	$incentive_type   = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
+	$incentive_amount = edd_get_option( 'edd_wallet_incentive_amount', 0 );
+
+	if( $incentive_amount <= 0 ) {
+		return;
+	}
+
+	if( ! EDD()->session->get( 'wallet_has_incentives' ) ) {
+		return;
+	}
+
+	if( $incentive_type == 'percent' ) {
+
+		$discount = $incentive_amount . '%';
+
+	} else {
+		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount * edd_get_cart_quantity() ) );
+
+	}
+?>
+	<tr class="edd_cart_footer_row edd_wallet_incentive_row">
+		<td colspan="3"><?php printf( __( 'Wallet discount: %s', 'edd_sl' ), $discount ); ?></td>
+	</tr>
+<?php
+}
+add_action( 'edd_cart_items_after', 'edd_wallet_cart_items_renewal_row' );
