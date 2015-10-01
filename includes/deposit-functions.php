@@ -88,10 +88,10 @@ function edd_wallet_process_admin_deposit() {
 	} else {
 		if( $type == 'admin-deposit' ) {
 			// Deposit the funds
-			edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			$item = edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
 		} else {
 			// Withdraw the funds
-			edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			$item = edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
 		}
 
 		// Maybe send email
@@ -100,7 +100,7 @@ function edd_wallet_process_admin_deposit() {
 		}
 	}
 
-	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $_POST['wallet-user'] . '&edd-message=' . $message ) );
+	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $_GET['id'] . '&edd-message=' . $message ) );
 	exit;
 }
 add_action( 'edd_wallet_process_admin_deposit', 'edd_wallet_process_admin_deposit' );
