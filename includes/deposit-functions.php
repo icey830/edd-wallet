@@ -88,10 +88,10 @@ function edd_wallet_process_admin_deposit() {
 	} else {
 		if( $type == 'admin-deposit' ) {
 			// Deposit the funds
-			edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			$item = edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
 		} else {
 			// Withdraw the funds
-			edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			$item = edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
 		}
 
 		// Maybe send email

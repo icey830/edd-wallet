@@ -43,6 +43,7 @@ class EDD_Wallet_Helper {
 	 * @return		mixed
 	 */
 	public function deposit( $user, $amount, $type = 'deposit', $payment_id = 0 ) {
+
 		if( is_email( $user ) || strpos( $user, '@' ) !== false ) {
 			$user = get_user_by( 'email', $user );
 			$user = $user->ID;
@@ -62,7 +63,7 @@ class EDD_Wallet_Helper {
 			'amount'        => $amount
 		);
 
-		$item = edd_wallet()->db->add( $args );
+		return edd_wallet()->db->add( $args );
 	}
 
 
@@ -102,6 +103,9 @@ class EDD_Wallet_Helper {
 		// Override customer value increase
 		$customer = new EDD_Customer( $user );
 		$customer->decrease_value( $amount );
+
+		return $item;
+
 	}
 
 
