@@ -33,6 +33,7 @@ add_action( 'admin_menu', 'edd_wallet_admin_pages' );
  */
 function edd_wallet_edit_form() {
 	$return_url = esc_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-customers', 'view' => 'wallet', 'id' => $_GET['id'] ), admin_url( 'edit.php' ) ) );
+	$customer   = new EDD_Customer( $_GET['id'] );
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Edit Wallet', 'edd-wallet' ); ?>&nbsp;<a href="<?php echo $return_url; ?>" class="page-title-action"><?php _e( 'Back to Details', 'edd-wallet' ); ?></a></h2>
@@ -73,7 +74,7 @@ function edd_wallet_edit_form() {
 				</tbody>
 			</table>
 			<?php wp_nonce_field( 'edd-wallet-admin-deposit-nonce' ); ?>
-			<input type="hidden" name="wallet-user" value="<?php echo $_GET['id']; ?>" />
+			<input type="hidden" name="wallet-user" value="<?php echo $customer->user_id; ?>" />
 			<input type="hidden" name="edd_action" value="wallet_process_admin_deposit" />
 			<?php submit_button( __( 'Edit Wallet', 'edd-wallet' ) ); ?>
 		</form>

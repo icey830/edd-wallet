@@ -61,7 +61,7 @@ function edd_customer_wallet_view( $customer ) {
 	</div>
 
 	<?php do_action( 'edd_customer_wallet_before_stats', $customer ); ?>
-	<?php $value = edd_wallet()->wallet->balance( $customer->id ); ?>
+	<?php $value = edd_wallet()->wallet->balance( $customer->user_id ); ?>
 
 	<div id="wallet-stats-wrapper" class="customer-section">
 		<ul>
@@ -80,7 +80,7 @@ function edd_customer_wallet_view( $customer ) {
 		<h3><?php _e( 'Recent Activity', 'edd-wallet' ); ?></h3>
 
 		<?php
-		$activity = edd_wallet_get_activity( $customer->id );
+		$activity = edd_wallet_get_activity( $customer->user_id );
 		?>
 
 		<table class="wp-list-table widefat striped activity">
