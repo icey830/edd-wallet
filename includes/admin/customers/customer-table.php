@@ -56,7 +56,7 @@ function edd_wallet_column_data( $value, $item_id ) {
 	$value = edd_currency_filter( edd_format_amount( (float) $value ) );
 
 	// Build the wallet link
-	$value = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $customer->user_id ) . '" title="' . __( 'View user wallet', 'edd-wallet' ) . '">' . $value . '</a>';
+	$value = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $item_id ) . '" title="' . __( 'View user wallet', 'edd-wallet' ) . '">' . $value . '</a>';
 
 	return $value;
 }
