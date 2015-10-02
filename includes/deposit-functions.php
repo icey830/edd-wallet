@@ -159,6 +159,34 @@ add_action( 'edd_complete_purchase', 'edd_wallet_add_funds' );
 
 
 /**
+ * Filter purchase summaries to adapt for Stripe deposits
+ *
+ * @since       1.0.4
+ * @param       string $summary The current summary
+ * @param       array $purchase_data The data for a given purchase
+ * @param       bool $email
+ * @return      string $summary The updated summary
+ */
+function edd_wallet_maybe_override_summary( $summary, $purchase_data, $email ) {
+	// Get the payment ID
+	$payment 	= edd_get_payment_by( 'key', $purchase_data['key'] );
+	$payment_id = $payment->ID;
+
+	// Get the payment fees
+	$fees = edd_get_payment_fees( $payment_id );
+
+	if( $fees && count( $fees ) == 1 ) {
+		if( $fees[0]['id'] == 'edd-wallet-deposit' ) {
+			$summary = edd_get_option( 'edd_wallet_deposit_description', __( 'Deposit to wallet', 'edd-wallet' ) );
+		}
+	}
+
+	return $summary;
+}
+add_filter( 'edd_get_purchase_summary', 'edd_wallet_maybe_override_summary', 10, 3 );
+
+
+/**
  * Build a list of wallet activity
  *
  * @since       1.0.0
