@@ -85,3 +85,39 @@ function edd_wallet_deposit_shortcode( $atts, $content = null ) {
 	return apply_filters( 'edd_wallet_deposit_form', $deposit_form, $atts );
 }
 add_shortcode( 'edd_deposit', 'edd_wallet_deposit_shortcode' );
+
+
+/**
+ * Wallet value shortcode
+ *
+ * @since       1.0.0
+ * @param       array $atts Shortcode attributes
+ * @param       string $content Shortcode content
+ * @global      object $current_user The current user information
+ * @return      string The wallet value
+ */
+function edd_wallet_value_shortcode( $atts, $content = null ) {
+	$atts = shortcode_atts( array(
+		'wrapper'       => true,
+		'wrapper_class' => 'edd-wallet-value'
+	), $atts, 'edd_wallet_value' );
+
+	// Bail if user isn't logged in
+	if( ! is_user_logged_in() ) {
+		return;
+	}
+
+	global $current_user;
+
+	get_currentuserinfo();
+
+	$value = edd_wallet()->wallet->balance( $current_user->ID );
+	$value = edd_currency_filter( edd_format_amount( $value ) );
+
+	if( $atts['wrapper'] ) {
+		$value = '<span class="' . $atts['wrapper_class'] . '">' . $value . '</span>';
+	}
+
+	return $value;
+}
+add_shortcode( 'edd_wallet_value', 'edd_wallet_value_shortcode' );
