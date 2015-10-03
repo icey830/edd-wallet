@@ -63,6 +63,8 @@ class EDD_Wallet_Helper {
 			'amount'        => $amount
 		);
 
+		do_action( 'edd_wallet_deposit', $args );
+
 		return edd_wallet()->db->add( $args );
 	}
 
@@ -103,6 +105,8 @@ class EDD_Wallet_Helper {
 		// Override customer value increase
 		$customer = new EDD_Customer( $user );
 		$customer->decrease_value( $amount );
+
+		do_action( 'edd_wallet_withdraw', $args );
 
 		return $item;
 
