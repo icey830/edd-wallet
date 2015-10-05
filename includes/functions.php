@@ -101,7 +101,7 @@ function edd_wallet_get_email_tags_list( $type = '' ) {
 	$unusable_tags = apply_filters( 'edd_wallet_remove_email_tags', $unusable_tags, $type );
 
 	foreach( $unusable_tags as $tag ) {
-		edd_remove_email_tag( $tag );
+		edd_wallet_remove_email_tag( $tag );
 	}
 
 	// Get all email tags
