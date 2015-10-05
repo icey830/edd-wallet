@@ -69,21 +69,15 @@ function edd_wallet_process_admin_deposit() {
 	}
 
 	// Get the current value of their wallet
-	$value = get_user_meta( $_POST['wallet-user'], '_edd_wallet_value', true );
+	$value = edd_wallet()->wallet->balance( $_POST['wallet-user'] );
 	$value = ( $value ? $value : 0 );
 
 	// Adjust their balance
 	if( $_POST['wallet-edit-type'] == 'admin-deposit' ) {
-		// Add the deposit value
-		$value = $value + (float) $_POST['wallet-amount'];
-
 		// Setup the edit type
 		$type = 'admin-deposit';
 		$message = 'wallet_deposit_succeeded';
 	} else {
-		// Subtract the withdraw value
-		$value = $value - (float) $_POST['wallet-amount'];
-
 		// Setup the edit type
 		$type = 'admin-withdraw';
 		$message = 'wallet_withdraw_succeeded';
@@ -92,18 +86,13 @@ function edd_wallet_process_admin_deposit() {
 	if( $value < 0 ) {
 		$message = 'wallet_deposit_failed';
 	} else {
-		// Update the user wallet
-		update_user_meta( $_POST['wallet-user'], '_edd_wallet_value', $value );
-
-		// Record the deposit
-		$args = array(
-			'user_id'       => $_POST['wallet-user'],
-			'payment_id'    => 0,
-			'type'          => $type,
-			'amount'        => $_POST['wallet-amount']
-		);
-
-		$item = edd_wallet()->wallet->add( $args );
+		if( $type == 'admin-deposit' ) {
+			// Deposit the funds
+			$item = edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+		} else {
+			// Withdraw the funds
+			$item = edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+		}
 
 		// Maybe send email
 		if( isset( $_POST['wallet-receipt'] ) && $_POST['wallet-receipt'] == '1' ) {
@@ -111,7 +100,7 @@ function edd_wallet_process_admin_deposit() {
 		}
 	}
 
-	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $_POST['wallet-user'] . '&edd-message=' . $message ) );
+	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-customers&view=wallet&id=' . $_GET['id'] . '&edd-message=' . $message ) );
 	exit;
 }
 add_action( 'edd_wallet_process_admin_deposit', 'edd_wallet_process_admin_deposit' );
@@ -126,7 +115,7 @@ add_action( 'edd_wallet_process_admin_deposit', 'edd_wallet_process_admin_deposi
  * @return      void
  */
 function edd_wallet_clear_deposits_from_cart( $download_id, $options ) {
-	$deposit = EDD()->fees->get_fee( 'edd-wallet-deposit' ); 
+	$deposit = EDD()->fees->get_fee( 'edd-wallet-deposit' );
 
 	// Deposits and items can't be handled at the same time!
 	if( $deposit ) {
@@ -158,25 +147,8 @@ function edd_wallet_add_funds( $payment_id ) {
 			// Get the ID of the purchaser
 			$user_id = edd_get_payment_user_id( $payment_id );
 
-			// Get the current value of their wallet
-			$value = get_user_meta( $user_id, '_edd_wallet_value', true );
-			$value = ( $value ? $value : 0 );
-
-			// Add the deposit value
-			$value = $value + $fees[0]['amount'];
-
-			// Update the user wallet
-			update_user_meta( $user_id, '_edd_wallet_value', $value );
-
-			// Record the deposit
-			$args = array(
-				'user_id'       => $user_id,
-				'payment_id'    => $payment_id,
-				'type'          => 'deposit',
-				'amount'        => $fees[0]['amount']
-			);
-
-			edd_wallet()->wallet->add( $args );
+			// Deposit the funds
+			edd_wallet()->wallet->deposit( $user_id, $fees[0]['amount'], 'deposit', $payment_id );
 
 			// Tag the payment so we can find it later
 			edd_update_payment_meta( $payment_id, '_edd_wallet_deposit', $user_id );
@@ -187,6 +159,34 @@ add_action( 'edd_complete_purchase', 'edd_wallet_add_funds' );
 
 
 /**
+ * Filter purchase summaries to adapt for Stripe deposits
+ *
+ * @since       1.0.4
+ * @param       string $summary The current summary
+ * @param       array $purchase_data The data for a given purchase
+ * @param       bool $email
+ * @return      string $summary The updated summary
+ */
+function edd_wallet_maybe_override_summary( $summary, $purchase_data, $email ) {
+	// Get the payment ID
+	$payment 	= edd_get_payment_by( 'key', $purchase_data['key'] );
+	$payment_id = $payment->ID;
+
+	// Get the payment fees
+	$fees = edd_get_payment_fees( $payment_id );
+
+	if( $fees && count( $fees ) == 1 ) {
+		if( $fees[0]['id'] == 'edd-wallet-deposit' ) {
+			$summary = edd_get_option( 'edd_wallet_deposit_description', __( 'Deposit to wallet', 'edd-wallet' ) );
+		}
+	}
+
+	return $summary;
+}
+add_filter( 'edd_get_purchase_summary', 'edd_wallet_maybe_override_summary', 10, 3 );
+
+
+/**
  * Build a list of wallet activity
  *
  * @since       1.0.0
@@ -194,7 +194,7 @@ add_action( 'edd_complete_purchase', 'edd_wallet_add_funds' );
  * @return      array $activity The wallet activity
  */
 function edd_wallet_get_activity( $user_id ) {
-	$activity = edd_wallet()->wallet->get_customer_wallet( $user_id );
+	$activity = edd_wallet()->db->get_customer_wallet( $user_id );
 
 	return $activity;
 }

@@ -45,7 +45,14 @@ add_filter( 'edd_report_customer_columns', 'edd_wallet_customer_columns' );
  * @return      string $value The updated value for the column
  */
 function edd_wallet_column_data( $value, $item_id ) {
-	$value = get_user_meta( $item_id, '_edd_wallet_value', true );
+
+	$customer = new EDD_Customer( $item_id );
+
+	if( $customer->user_id < 1 ) {
+		return '';
+	}
+
+	$value = edd_wallet()->wallet->balance( $customer->user_id );
 	$value = edd_currency_filter( edd_format_amount( (float) $value ) );
 
 	// Build the wallet link
