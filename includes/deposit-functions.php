@@ -69,8 +69,9 @@ function edd_wallet_process_admin_deposit() {
 	}
 
 	// Get the current value of their wallet
-	$value = edd_wallet()->wallet->balance( $_POST['wallet-user'] );
-	$value = ( $value ? $value : 0 );
+	$value  = edd_wallet()->wallet->balance( $_POST['wallet-user'] );
+	$value  = ( $value ? $value : 0 );
+	$amount = absint( $_POST['wallet-amount'] );
 
 	// Adjust their balance
 	if( $_POST['wallet-edit-type'] == 'admin-deposit' ) {
@@ -84,18 +85,23 @@ function edd_wallet_process_admin_deposit() {
 	}
 
 	if( $value < 0 ) {
-		$message = 'wallet_deposit_failed';
+		$message = 'wallet_withdraw_failed';
 	} else {
 		if( $type == 'admin-deposit' ) {
 			// Deposit the funds
-			$item = edd_wallet()->wallet->deposit( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			$item = edd_wallet()->wallet->deposit( $_POST['wallet-user'], $amount, $type );
 		} else {
-			// Withdraw the funds
-			$item = edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $_POST['wallet-amount'], $type );
+			// Triple check that the user can afford this transaction!
+			if( $value - $amount < 0 ) {
+				$message = 'wallet_withdraw_failed';
+			} else {
+				// Withdraw the funds
+				$item = edd_wallet()->wallet->withdraw( $_POST['wallet-user'], $amount, $type );
+			}
 		}
 
 		// Maybe send email
-		if( isset( $_POST['wallet-receipt'] ) && $_POST['wallet-receipt'] == '1' ) {
+		if( isset( $_POST['wallet-receipt'] ) && $_POST['wallet-receipt'] == '1' && $message != 'wallet_withdraw_failed' ) {
 			edd_wallet_send_email( $type, $_POST['wallet-user'], $item );
 		}
 	}
@@ -215,7 +221,7 @@ function edd_wallet_edit_notice() {
 		add_settings_error( 'edd-notices', 'edd-wallet-withdraw-succeeded', __( 'The withdrawal has been made.', 'edd-wallet' ), 'updated' );
 	}
 
-	if( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'wallet_deposit_failed' && current_user_can( 'view_shop_reports' ) ) {
+	if( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'wallet_withdraw_failed' && current_user_can( 'view_shop_reports' ) ) {
 		add_settings_error( 'edd-notices', 'edd-wallet-deposit-failed', __( 'You can not withdraw more than the current balance.', 'edd-wallet' ), 'error' );
 	}
 
