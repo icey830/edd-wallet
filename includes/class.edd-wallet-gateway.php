@@ -160,7 +160,7 @@ class EDD_Wallet_Gateway {
 
 		$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
 
-		if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true ) {
+		if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
 			$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
 		}
 
