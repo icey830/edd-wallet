@@ -38,6 +38,9 @@ class EDD_Wallet_Gateway {
 		// Maybe show the gateway
 		add_filter( 'edd_enabled_payment_gateways', array( $this, 'show_gateway' ) );
 
+		// Override chosen gateway
+		add_filter( 'edd_chosen_gateway', array( $this, 'chosen_gateway' ) );
+
 		// Remove the CC form
 		add_action( 'edd_wallet_cc_form', '__return_false' );
 
@@ -199,6 +202,36 @@ class EDD_Wallet_Gateway {
 		}
 
 		return $gateways;
+	}
+
+
+	/**
+	 * Fix chosen gateway
+	 *
+	 * @since       1.0.7
+	 * @param       array $gateway The current chosen gateway
+	 * @return      array $gateway The fixed chosen gateway
+	 */
+	public function chosen_gateway( $gateway ) {
+		if( is_user_logged_in() ) {
+
+			// Get the current user
+			$user_id = get_current_user_id();
+
+			// Make sure we aren't making a deposit from our wallet
+			$fee = EDD()->fees->get_fee( 'edd-wallet-deposit' );
+
+			if( $fee ) {
+				$gateways = edd_get_enabled_payment_gateways();
+
+				if( count( $gateways ) == 1 ) {
+					$gateway = array_keys( $gateways );
+					$gateway = $gateway[0];
+				}
+			}
+		}
+
+		return $gateway;
 	}
 
 
