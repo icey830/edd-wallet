@@ -177,14 +177,17 @@ function edd_wallet_maybe_override_summary( $summary, $purchase_data, $email ) {
 
 	// Get the payment ID
 	$payment 	= edd_get_payment_by( 'key', $purchase_data['purchase_key'] );
-	$payment_id = $payment->ID;
 
-	// Get the payment fees
-	$fees = edd_get_payment_fees( $payment_id );
+	if( $payment ) {
+		$payment_id = $payment->ID;
 
-	if( $fees && count( $fees ) == 1 ) {
-		if( $fees[0]['id'] == 'edd-wallet-deposit' ) {
-			$summary = edd_get_option( 'edd_wallet_deposit_description', __( 'Deposit to wallet', 'edd-wallet' ) );
+		// Get the payment fees
+		$fees = edd_get_payment_fees( $payment_id );
+
+		if( $fees && count( $fees ) == 1 ) {
+			if( $fees[0]['id'] == 'edd-wallet-deposit' ) {
+				$summary = edd_get_option( 'edd_wallet_deposit_description', __( 'Deposit to wallet', 'edd-wallet' ) );
+			}
 		}
 	}
 
