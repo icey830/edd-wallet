@@ -174,8 +174,9 @@ add_action( 'edd_complete_purchase', 'edd_wallet_add_funds' );
  * @return      string $summary The updated summary
  */
 function edd_wallet_maybe_override_summary( $summary, $purchase_data, $email ) {
+
 	// Get the payment ID
-	$payment 	= edd_get_payment_by( 'key', $purchase_data['key'] );
+	$payment 	= edd_get_payment_by( 'key', $purchase_data['purchase_key'] );
 	$payment_id = $payment->ID;
 
 	// Get the payment fees
