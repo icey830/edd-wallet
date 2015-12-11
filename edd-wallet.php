@@ -220,7 +220,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 					'name'  => __( 'Admin Deposit Notification Subject', 'edd-wallet' ),
 					'desc'  => __( 'Enter the subject line for admin notifications when users deposit funds.', 'edd-wallet' ),
 					'type'  => 'text',
-					'std'   => __( 'New depost', 'edd-wallet' )
+					'std'   => __( 'New deposit', 'edd-wallet' )
 				),
 				'wallet_admin_deposit_notification' => array(
 					'id'    => 'wallet_admin_deposit_notification',
