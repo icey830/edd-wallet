@@ -60,4 +60,4 @@ function edd_wallet_column_data( $value, $item_id ) {
 
 	return $value;
 }
-add_filter( 'edd_report_column_wallet', 'edd_wallet_column_data', 10, 2 );
+add_filter( 'edd_customers_column_wallet', 'edd_wallet_column_data', 10, 2 );
