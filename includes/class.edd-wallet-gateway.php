@@ -89,6 +89,26 @@ class EDD_Wallet_Gateway {
 				'std'       => __( 'Deposit to wallet', 'edd-wallet' )
 			),
 			array(
+				'id'        => 'edd_wallet_arbitrary_deposits',
+				'name'      => __( 'Allow Arbitrary Deposits', 'edd-wallet' ),
+				'desc'      => __( 'Allow users to enter arbitrary deposit amounts', 'edd-wallet' ),
+				'type'      => 'checkbox'
+			),
+			array(
+				'id'        => 'edd_wallet_arbitrary_deposit_label',
+				'name'      => __( 'Arbitrary Deposit Label', 'edd-wallet' ),
+				'desc'      => __( 'Customize the text for the arbitrary deposit field label', 'edd-wallet' ),
+				'type'      => 'text',
+				'std'       => __( 'Custom Amount', 'edd-wallet' )
+			),
+			array(
+				'id'        => 'edd_wallet_custom_deposit_error',
+				'name'      => __( 'Arbitrary Deposit Error', 'edd-wallet' ),
+				'desc'      => __( 'Customize the text for errors when an arbitrary deposit is missing or invalid', 'edd-wallet' ),
+				'type'      => 'text',
+				'std'       => __( 'You must enter a deposit amount!', 'edd-wallet' )
+			),
+			array(
 				'id'        => 'edd_wallet_deposit_levels',
 				'name'      => __( 'Deposit Levels', 'edd-wallet' ),
 				'desc'      => __( 'Specify the allowed deposit levels', 'edd-wallet' ),

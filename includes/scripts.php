@@ -48,6 +48,10 @@ function edd_wallet_scripts() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	wp_enqueue_style( 'edd-wallet', EDD_WALLET_URL . 'assets/css/edd-wallet' . $suffix . '.css', EDD_WALLET_VER );
+	wp_enqueue_script( 'edd-wallet', EDD_WALLET_URL . 'assets/js/edd-wallet' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
+	wp_localize_script( 'edd-wallet', 'edd_wallet_vars', array(
+		'custom_deposit_error' => edd_get_option( 'edd_wallet_custom_deposit_error', __( 'You must enter a valid deposit amount!', 'edd-wallet' ) )
+	) );
 
 	if( edd_get_option( 'edd_wallet_disable_styles', false ) != true ) {
 		wp_enqueue_style( 'edd-wallet-deposit', EDD_WALLET_URL . 'assets/css/deposit' . $suffix . '.css', EDD_WALLET_VER );
@@ -56,7 +60,7 @@ function edd_wallet_scripts() {
 	$fee = EDD()->fees->get_fee( 'edd-wallet-deposit' );
 
 	if( $fee ) {
-		wp_enqueue_script( 'edd-wallet', EDD_WALLET_URL . 'assets/js/edd-wallet' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
+		wp_enqueue_script( 'edd-wallet-fees', EDD_WALLET_URL . 'assets/js/edd-wallet-fees' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
 	}
 
 	if( (int) edd_get_option( 'edd_wallet_incentive_amount', 0 ) > 0 ) {
