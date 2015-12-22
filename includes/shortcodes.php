@@ -64,11 +64,20 @@ function edd_wallet_deposit_shortcode( $atts, $content = null ) {
 					echo '<label><input type="radio" id="edd_wallet_deposit_amount" name="edd_wallet_deposit_amount" value="' . $level . '"' . $checked . '> ' . edd_currency_filter( edd_format_amount( $level ) ) . '</label>';
 					echo '</li>';
 				}
+
+				if( edd_get_option( 'edd_wallet_arbitrary_deposits', false ) ) {
+					echo '<li>';
+					echo '<label><input type="radio" id="edd_wallet_deposit_amount" name="edd_wallet_deposit_amount" value="custom"' . $checked . '> ' . edd_get_option( 'edd_wallet_arbitrary_deposit_label', __( 'Custom Amount', 'edd-wallet' ) ) . '</label>';
+					echo '<input type="text" id="edd_wallet_custom_deposit" name="edd_wallet_custom_deposit" value="" style="display: none" />';
+					echo '</li>';
+				}
 				?>
 			</ul>
 		</div>
 
 		<div class="edd_wallet_deposit_submit_wrapper">
+			<div id="edd_wallet_error_wrapper" class="edd_errors edd-alert edd-alert-error" style="display: none"></div>
+
 			<?php
 			$class = implode( ' ', array( $atts['button_style'], $atts['button_color'], trim( $atts['button_class'] ) ) );
 

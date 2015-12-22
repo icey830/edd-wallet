@@ -28,13 +28,19 @@ function edd_wallet_process_deposit() {
 	// Make sure the cart is empty
 	edd_empty_cart();
 
+	$value = $_POST['edd_wallet_deposit_amount'];
+
+	if( $value == 'custom' ) {
+		$value = $_POST['edd_wallet_custom_deposit'];
+	}
+
 	// Setup the fee label
 	$label = edd_get_option( 'edd_wallet_deposit_description', __( 'Deposit to wallet', 'edd-wallet' ) );
-	$label = str_replace( '{val}', edd_currency_filter( edd_format_amount( $_POST['edd_wallet_deposit_amount'] ) ), $label );
+	$label = str_replace( '{val}', edd_currency_filter( edd_format_amount( $value ) ), $label );
 
 	// Setup the fee (product) for the deposit
 	$fee = array(
-		'amount'        => $_POST['edd_wallet_deposit_amount'],
+		'amount'        => $value,
 		'label'         => $label,
 		'type'          => 'item',
 		'no_tax'        => true,
