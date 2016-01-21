@@ -202,7 +202,7 @@ class EDD_Wallet_Gateway {
 	 * @return      array $gateways The updated gateways
 	 */
 	public function show_gateway( $gateways ) {
-		if( is_user_logged_in() ) {
+		if( is_user_logged_in() && ! is_admin() ) {
 
 			// Get the current user
 			$user_id = get_current_user_id();
