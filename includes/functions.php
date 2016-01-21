@@ -48,27 +48,6 @@ function edd_wallet_get_deposit_levels() {
 
 
 /**
- * Simple function to sort object arrays
- *
- * @since       1.0.0
- * @param       array $sort The array to sort
- */
-function edd_wallet_object_sort( $sort ) {
-	return function( $a, $b ) use( $sort ) {
-		if( $a->$sort > $b->$sort ) {
-			return -1;
-		}
-
-		if( $a->$sort < $b->$sort ) {
-			return 1;
-		}
-
-		return 0;
-	};
-}
-
-
-/**
  * Get a formatted HTML list of all available email tags
  *
  * Based on edd_get_emails_tags_list()
