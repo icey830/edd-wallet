@@ -62,8 +62,7 @@ class edd_wallet_widget extends WP_Widget {
 
 		do_action( 'edd_before_wallet_widget' );
 
-		global $current_user;
-		get_currentuserinfo();
+		$current_user = wp_get_current_user();
 
 		$value = edd_wallet()->wallet->balance( $current_user->ID );
 		$value = edd_currency_filter( edd_format_amount( $value ) );
