@@ -29,8 +29,12 @@ class EDD_Wallet_Gateway {
 	 * @return      void
 	 */
 	public function __construct() {
+		// Add settings section
+		add_filter( 'edd_settings_sections_gateways', array( $this, 'settings_section' ) );
+
 		// Register settings
 		add_filter( 'edd_settings_gateways', array( $this, 'settings' ) );
+		add_filter( 'edd_settings_gateways', array( $this, 'settings_pre25' ) );
 
 		// Add the gateway
 		add_filter( 'edd_payment_gateways', array( $this, 'register_gateway' ) );
@@ -53,6 +57,21 @@ class EDD_Wallet_Gateway {
 
 
 	/**
+	 * Add settings section
+	 *
+	 * @access      public
+	 * @since       1.1.2
+	 * @param       array $sections The existing extensions sections
+	 * @return      array The modified extensions settings
+	 */
+	function settings_section( $sections ) {
+		$sections['wallet'] = __( 'Wallet', 'edd-wallet' );
+
+		return $sections;
+	}
+
+
+	/**
 	 * Settings
 	 *
 	 * @access      public
@@ -61,108 +80,244 @@ class EDD_Wallet_Gateway {
 	 * @return      array The updated settings
 	 */
 	public function settings( $settings ) {
-		$new_settings = array(
-			array(
-				'id'        => 'edd_wallet_gateway_settings',
-				'name'      => '<strong>' . __( 'Wallet Settings', 'edd-wallet' ) . '</strong>',
-				'desc'      => '',
-				'type'      => 'header'
-			),
-			array(
-				'id'        => 'edd_wallet_gateway_label',
-				'name'      => __( 'Gateway Label', 'edd-wallet' ),
-				'desc'      => __( 'Customize the gateway label', 'edd-wallet' ),
-				'type'      => 'text',
-				'std'       => __( 'My Wallet', 'edd-wallet' )
-			),
-			array(
-				'id'        => 'edd_wallet_gateway_label_value',
-				'name'      => __( 'Display Value', 'edd-wallet' ),
-				'desc'      => __( 'Display the amount in the users\' wallet next to the gateway label', 'edd-wallet' ),
-				'type'      => 'checkbox'
-			),
-			array(
-				'id'        => 'edd_wallet_deposit_description',
-				'name'      => __( 'Deposit Description', 'edd-wallet' ),
-				'desc'      => __( 'Customize how deposits are displayed in cart, enter {val} to display value', 'edd-wallet' ),
-				'type'      => 'text',
-				'std'       => __( 'Deposit to wallet', 'edd-wallet' )
-			),
-			array(
-				'id'        => 'edd_wallet_arbitrary_deposits',
-				'name'      => __( 'Allow Arbitrary Deposits', 'edd-wallet' ),
-				'desc'      => __( 'Allow users to enter arbitrary deposit amounts', 'edd-wallet' ),
-				'type'      => 'checkbox'
-			),
-			array(
-				'id'        => 'edd_wallet_arbitrary_deposit_label',
-				'name'      => __( 'Arbitrary Deposit Label', 'edd-wallet' ),
-				'desc'      => __( 'Customize the text for the arbitrary deposit field label', 'edd-wallet' ),
-				'type'      => 'text',
-				'std'       => __( 'Custom Amount', 'edd-wallet' )
-			),
-			array(
-				'id'        => 'edd_wallet_custom_deposit_error',
-				'name'      => __( 'Arbitrary Deposit Error', 'edd-wallet' ),
-				'desc'      => __( 'Customize the text for errors when an arbitrary deposit is missing or invalid', 'edd-wallet' ),
-				'type'      => 'text',
-				'std'       => __( 'You must enter a deposit amount!', 'edd-wallet' )
-			),
-			array(
-				'id'        => 'edd_wallet_deposit_levels',
-				'name'      => __( 'Deposit Levels', 'edd-wallet' ),
-				'desc'      => __( 'Specify the allowed deposit levels', 'edd-wallet' ),
-				'type'      => 'multiselect',
-				'chosen'    => true,
-				'placeholder'   => __( 'Select one or more deposit levels', 'edd-wallet' ),
-				'options'   => edd_wallet_get_deposit_levels(),
-				'std'       => array(
-					'20',
-					'40',
-					'60',
-					'80',
-					'100',
-					'200',
-					'500'
+		if( EDD_VERSION >= '2.5' ) {
+			$new_settings = array(
+				'wallet' => array(
+					array(
+						'id'   => 'edd_wallet_gateway_settings',
+						'name' => '<strong>' . __( 'General Settings', 'edd-wallet' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					array(
+						'id'   => 'edd_wallet_gateway_label',
+						'name' => __( 'Gateway Label', 'edd-wallet' ),
+						'desc' => __( 'Customize the gateway label', 'edd-wallet' ),
+						'type' => 'text',
+						'std'  => __( 'My Wallet', 'edd-wallet' )
+					),
+					array(
+						'id'   => 'edd_wallet_gateway_label_value',
+						'name' => __( 'Display Value', 'edd-wallet' ),
+						'desc' => __( 'Display the amount in the users\' wallet next to the gateway label', 'edd-wallet' ),
+						'type' => 'checkbox'
+					),
+					array(
+						'id'   => 'edd_wallet_deposit_settings',
+						'name' => '<strong>' . __( 'Deposit Settings', 'edd-wallet' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					array(
+						'id'   => 'edd_wallet_deposit_description',
+						'name' => __( 'Deposit Description', 'edd-wallet' ),
+						'desc' => __( 'Customize how deposits are displayed in cart, enter {val} to display value', 'edd-wallet' ),
+						'type' => 'text',
+						'std'  => __( 'Deposit to wallet', 'edd-wallet' )
+					),
+					array(
+						'id'   => 'edd_wallet_arbitrary_deposits',
+						'name' => __( 'Allow Arbitrary Deposits', 'edd-wallet' ),
+						'desc' => __( 'Allow users to enter arbitrary deposit amounts', 'edd-wallet' ),
+						'type' => 'checkbox'
+					),
+					array(
+						'id'   => 'edd_wallet_arbitrary_deposit_label',
+						'name' => __( 'Arbitrary Deposit Label', 'edd-wallet' ),
+						'desc' => __( 'Customize the text for the arbitrary deposit field label', 'edd-wallet' ),
+						'type' => 'text',
+						'std'  => __( 'Custom Amount', 'edd-wallet' )
+					),
+					array(
+						'id'   => 'edd_wallet_custom_deposit_error',
+						'name' => __( 'Arbitrary Deposit Error', 'edd-wallet' ),
+						'desc' => __( 'Customize the text for errors when an arbitrary deposit is missing or invalid', 'edd-wallet' ),
+						'type' => 'text',
+						'std'  => __( 'You must enter a deposit amount!', 'edd-wallet' )
+					),
+					array(
+						'id'          => 'edd_wallet_deposit_levels',
+						'name'        => __( 'Deposit Levels', 'edd-wallet' ),
+						'desc'        => __( 'Specify the allowed deposit levels', 'edd-wallet' ),
+						'type'        => 'multiselect',
+						'chosen'      => true,
+						'placeholder' => __( 'Select one or more deposit levels', 'edd-wallet' ),
+						'options'     => edd_wallet_get_deposit_levels(),
+						'std'         => array(
+							'20',
+							'40',
+							'60',
+							'80',
+							'100',
+							'200',
+							'500'
+						)
+					),
+					array(
+						'id'   => 'edd_wallet_incentive_settings',
+						'name' => '<strong>' . __( 'Incentive Settings', 'edd-wallet' ) . '</strong>',
+						'desc' => '',
+						'type' => 'header'
+					),
+					array(
+						'id'   => 'edd_wallet_incentive_amount',
+						'name' => __( 'Incentive Amount', 'edd-wallet' ),
+						'desc' => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet. Example: 10 = 10%', 'edd-wallet' ),
+						'type' => 'number',
+						'size' => 'small',
+						'min'  => 0,
+						'step' => .01,
+						'std'  => 0
+					),
+					array(
+						'id'      => 'edd_wallet_incentive_type',
+						'name'    => __( 'Incentive Type', 'edd-wallet' ),
+						'desc'    => __( 'Specify whether incentives are a flat amount, or a percentage.', 'edd-wallet' ),
+						'type'    => 'select',
+						'options' => array(
+							'flatrate' => __( 'Flat Rate', 'edd-wallet' ),
+							'percent'  => __( 'Percentage', 'edd-wallet' )
+						),
+						'std'     => 'flatrate'
+					),
+					array(
+						'id'   => 'edd_wallet_incentive_quantities',
+						'name' => __( 'Incentive Quantities', 'edd-wallet' ),
+						'desc' => __( 'By default, incentives only apply once per item. Check this to include quantities in calculations.', 'edd-wallet' ),
+						'type' => 'checkbox'
+					),
+					array(
+						'id'   => 'edd_wallet_incentive_description',
+						'name' => __( 'Incentive Description', 'edd-wallet' ),
+						'desc' => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),
+						'type' => 'text',
+						'std'  => __( 'Wallet Discount', 'edd-wallet' )
+					)
 				)
-			),
-			array(
-				'id'        => 'edd_wallet_incentive_amount',
-				'name'      => __( 'Incentive Amount', 'edd-wallet' ),
-				'desc'      => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet. Example: 10 = 10%', 'edd-wallet' ),
-				'type'      => 'number',
-				'size'      => 'small',
-				'min'       => 0,
-				'step'      => .01,
-				'std'       => 0
-			),
-			array(
-				'id'        => 'edd_wallet_incentive_type',
-				'name'      => __( 'Incentive Type', 'edd-wallet' ),
-				'desc'      => __( 'Specify whether incentives are a flat amount, or a percentage.', 'edd-wallet' ),
-				'type'      => 'select',
-				'options'   => array(
-					'flatrate'  => __( 'Flat Rate', 'edd-wallet' ),
-					'percent'   => __( 'Percentage', 'edd-wallet' )
-				),
-				'std'       => 'flatrate'
-			),
-			array(
-				'id'        => 'edd_wallet_incentive_quantities',
-				'name'      => __( 'Incentive Quantities', 'edd-wallet' ),
-				'desc'      => __( 'By default, incentives only apply once per item. Check this to include quantities in calculations.', 'edd-wallet' ),
-				'type'      => 'checkbox'
-			),
-			array(
-				'id'        => 'edd_wallet_incentive_description',
-				'name'      => __( 'Incentive Description', 'edd-wallet' ),
-				'desc'      => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),
-				'type'      => 'text',
-				'std'       => __( 'Wallet Discount', 'edd-wallet' )
-			)
-		);
+			);
 
-		return array_merge( $settings, $new_settings );
+			$settings = array_merge( $settings, $new_settings );
+		}
+
+		return $settings;
+	}
+
+
+	/**
+	 * Settings
+	 *
+	 * @access      public
+	 * @since       1.0.0
+	 * @param       array $settings The existing settings
+	 * @return      array The updated settings
+	 */
+	public function settings_pre25( $settings ) {
+		if( EDD_VERSION < '2.5' ) {
+			$new_settings = array(
+				array(
+					'id'   => 'edd_wallet_gateway_settings',
+					'name' => '<strong>' . __( 'Wallet Settings', 'edd-wallet' ) . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				array(
+					'id'   => 'edd_wallet_gateway_label',
+					'name' => __( 'Gateway Label', 'edd-wallet' ),
+					'desc' => __( 'Customize the gateway label', 'edd-wallet' ),
+					'type' => 'text',
+					'std'  => __( 'My Wallet', 'edd-wallet' )
+				),
+				array(
+					'id'   => 'edd_wallet_gateway_label_value',
+					'name' => __( 'Display Value', 'edd-wallet' ),
+					'desc' => __( 'Display the amount in the users\' wallet next to the gateway label', 'edd-wallet' ),
+					'type' => 'checkbox'
+				),
+				array(
+					'id'   => 'edd_wallet_deposit_description',
+					'name' => __( 'Deposit Description', 'edd-wallet' ),
+					'desc' => __( 'Customize how deposits are displayed in cart, enter {val} to display value', 'edd-wallet' ),
+					'type' => 'text',
+					'std'  => __( 'Deposit to wallet', 'edd-wallet' )
+				),
+				array(
+					'id'   => 'edd_wallet_arbitrary_deposits',
+					'name' => __( 'Allow Arbitrary Deposits', 'edd-wallet' ),
+					'desc' => __( 'Allow users to enter arbitrary deposit amounts', 'edd-wallet' ),
+					'type' => 'checkbox'
+				),
+				array(
+					'id'   => 'edd_wallet_arbitrary_deposit_label',
+					'name' => __( 'Arbitrary Deposit Label', 'edd-wallet' ),
+					'desc' => __( 'Customize the text for the arbitrary deposit field label', 'edd-wallet' ),
+					'type' => 'text',
+					'std'  => __( 'Custom Amount', 'edd-wallet' )
+				),
+				array(
+					'id'   => 'edd_wallet_custom_deposit_error',
+					'name' => __( 'Arbitrary Deposit Error', 'edd-wallet' ),
+					'desc' => __( 'Customize the text for errors when an arbitrary deposit is missing or invalid', 'edd-wallet' ),
+					'type' => 'text',
+					'std'  => __( 'You must enter a deposit amount!', 'edd-wallet' )
+				),
+				array(
+					'id'          => 'edd_wallet_deposit_levels',
+					'name'        => __( 'Deposit Levels', 'edd-wallet' ),
+					'desc'        => __( 'Specify the allowed deposit levels', 'edd-wallet' ),
+					'type'        => 'multiselect',
+					'chosen'      => true,
+					'placeholder' => __( 'Select one or more deposit levels', 'edd-wallet' ),
+					'options'     => edd_wallet_get_deposit_levels(),
+					'std'         => array(
+						'20',
+						'40',
+						'60',
+						'80',
+						'100',
+						'200',
+						'500'
+					)
+				),
+				array(
+					'id'   => 'edd_wallet_incentive_amount',
+					'name' => __( 'Incentive Amount', 'edd-wallet' ),
+					'desc' => __( 'Set an optional amount to discount purchases by when paying from a users\' wallet. Example: 10 = 10%', 'edd-wallet' ),
+					'type' => 'number',
+					'size' => 'small',
+					'min'  => 0,
+					'step' => .01,
+					'std'  => 0
+				),
+				array(
+					'id'      => 'edd_wallet_incentive_type',
+					'name'    => __( 'Incentive Type', 'edd-wallet' ),
+					'desc'    => __( 'Specify whether incentives are a flat amount, or a percentage.', 'edd-wallet' ),
+					'type'    => 'select',
+					'options' => array(
+						'flatrate' => __( 'Flat Rate', 'edd-wallet' ),
+						'percent'  => __( 'Percentage', 'edd-wallet' )
+					),
+					'std'     => 'flatrate'
+				),
+				array(
+					'id'   => 'edd_wallet_incentive_quantities',
+					'name' => __( 'Incentive Quantities', 'edd-wallet' ),
+					'desc' => __( 'By default, incentives only apply once per item. Check this to include quantities in calculations.', 'edd-wallet' ),
+					'type' => 'checkbox'
+				),
+				array(
+					'id'   => 'edd_wallet_incentive_description',
+					'name' => __( 'Incentive Description', 'edd-wallet' ),
+					'desc' => __( 'Customize how incentives are displayed in cart.', 'edd-wallet' ),
+					'type' => 'text',
+					'std'  => __( 'Wallet Discount', 'edd-wallet' )
+				)
+			);
+
+			$settings = array_merge( $settings, $new_settings );
+		}
+
+		return $settings;
 	}
 
 
