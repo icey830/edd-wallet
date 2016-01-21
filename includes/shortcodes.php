@@ -102,7 +102,6 @@ add_shortcode( 'edd_deposit', 'edd_wallet_deposit_shortcode' );
  * @since       1.0.0
  * @param       array $atts Shortcode attributes
  * @param       string $content Shortcode content
- * @global      object $current_user The current user information
  * @return      string The wallet value
  */
 function edd_wallet_value_shortcode( $atts, $content = null ) {
@@ -116,9 +115,7 @@ function edd_wallet_value_shortcode( $atts, $content = null ) {
 		return;
 	}
 
-	global $current_user;
-
-	get_currentuserinfo();
+	$current_user = wp_get_current_user();
 
 	$value = edd_wallet()->wallet->balance( $current_user->ID );
 	$value = edd_currency_filter( edd_format_amount( $value ) );
