@@ -53,6 +53,9 @@ class EDD_Wallet_Gateway {
 
 		// Process refunds
 		add_action( 'edd_update_payment_status', array( $this, 'process_refund' ), 200, 3 );
+
+		// Maybe modify the checkout label
+		add_filter( 'edd_gateway_checkout_label_wallet', array( $this, 'append_balance_to_label' ), 10, 1 );
 	}
 
 
@@ -330,14 +333,8 @@ class EDD_Wallet_Gateway {
 	 * @return      array $gateways The updated gateway list
 	 */
 	public function register_gateway( $gateways ) {
-		$user_id = get_current_user_id();
-		$value = edd_wallet()->wallet->balance( $user_id );
 
 		$checkout_label = edd_get_option( 'edd_wallet_gateway_label', __( 'My Wallet', 'edd-wallet' ) );
-
-		if( edd_get_option( 'edd_wallet_gateway_label_value', false ) == true && edd_is_checkout() ) {
-			$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
-		}
 
 		$gateways['wallet'] = array(
 			'admin_label'       => 'Wallet',
@@ -407,6 +404,27 @@ class EDD_Wallet_Gateway {
 		}
 
 		return $gateway;
+	}
+
+	/**
+	 * If enabled, appends the current users' balance to the gateway label
+	 *
+	 * @since  1.1.3
+	 * @param  string $checkout_label The label for checkout
+	 * @return string                 Appended with the customer's value
+	 */
+	public function append_balance_to_label( $checkout_label ) {
+
+		if( edd_get_option( 'edd_wallet_gateway_label_value', false ) ) {
+
+			$user_id         = get_current_user_id();
+			$value           = edd_wallet()->wallet->balance( $user_id );
+			$checkout_label .= ' ' . sprintf( __( '(%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
+
+		}
+
+		return $checkout_label;
+
 	}
 
 
