@@ -71,7 +71,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 * @return      self::$instance The one true EDD_Wallet
 		 */
 		public static function instance() {
-			if( ! self::$instance ) {
+			if( ! self::$instance && function_exists( 'EDD' ) ) {
 				self::$instance = new EDD_Wallet();
 				self::$instance->setup_constants();
 				self::$instance->load_textdomain();
@@ -110,6 +110,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 * @return      void
 		 */
 		private function includes() {
+
 			require_once EDD_WALLET_DIR . 'includes/scripts.php';
 			require_once EDD_WALLET_DIR . 'includes/functions.php';
 			require_once EDD_WALLET_DIR . 'includes/shortcodes.php';
