@@ -40,7 +40,7 @@ function edd_wallet_display_cart_row() {
 		$fee           = EDD()->fees->get_fee( 'edd-wallet-funds' );
 		$allow_partial = edd_get_option( 'edd_wallet_allow_partial', false ) ? true : false;
 
-		if ( ( $allow_partial && $value != 0 && ! $fee ) || ( ! $allow_partial && $value >= $total && ! $fee ) ) {
+		if ( ( ( $allow_partial && $value != 0 && ! $fee ) || ( ! $allow_partial && $value >= $total && ! $fee ) ) && $total != 0 ) {
 			$action = edd_get_option( 'edd_wallet_cart_action_label', __( 'Apply to purchase', 'edd-wallet' ) );
 			?>
 			<tr class="edd_cart_wallet_row">
