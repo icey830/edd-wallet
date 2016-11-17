@@ -57,8 +57,8 @@ if ( ! class_exists( 'EDD_Wallet' ) ) {
 
 
 		/**
-		 * @var			object $wallet EDD Wallet Helper object
-		 * @since		1.0.1
+		 * @var         object $wallet EDD Wallet Helper object
+		 * @since       1.0.1
 		 */
 		public $wallet;
 
@@ -114,8 +114,8 @@ if ( ! class_exists( 'EDD_Wallet' ) ) {
 			require_once EDD_WALLET_DIR . 'includes/functions.php';
 			require_once EDD_WALLET_DIR . 'includes/shortcodes.php';
 			require_once EDD_WALLET_DIR . 'includes/widgets.php';
+			require_once EDD_WALLET_DIR . 'includes/actions.php';
 			require_once EDD_WALLET_DIR . 'includes/deposit-functions.php';
-			require_once EDD_WALLET_DIR . 'includes/class.edd-wallet-gateway.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-wallet-helper.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-db-wallet.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-email-tags.php';
