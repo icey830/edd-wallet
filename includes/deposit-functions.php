@@ -77,7 +77,7 @@ function edd_wallet_process_admin_deposit() {
 	// Get the current value of their wallet
 	$value  = edd_wallet()->wallet->balance( $_POST['wallet-user'] );
 	$value  = ( $value ? $value : 0 );
-	$amount = absint( $_POST['wallet-amount'] );
+	$amount = abs( $_POST['wallet-amount'] );
 
 	// Adjust their balance
 	if ( $_POST['wallet-edit-type'] == 'admin-deposit' ) {

@@ -83,7 +83,7 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 
 		if( $used_wallet !== false ) {
 			$user_id = edd_get_payment_user_id( $payment_id );
-			$amount  = absint( $fees[ $used_wallet ]['amount'] );
+			$amount  = abs( $fees[ $used_wallet ]['amount'] );
 
 			// Withdraw the funds
 			edd_wallet()->wallet->withdraw( $user_id, $amount, 'withdrawal', $payment_id );
@@ -111,7 +111,7 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 			if ( $used_gateway ) {
 				$refund_amount = edd_get_payment_amount( $payment_id );
 			} else {
-				$refund_amount = absint( $fees[ $used_wallet ]['amount'] );
+				$refund_amount = abs( $fees[ $used_wallet ]['amount'] );
 			}
 
 			// Deposit the funds

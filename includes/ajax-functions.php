@@ -64,7 +64,7 @@ function edd_wallet_process_apply() {
 	$fee_amount = ( $value < $total ? $value : $total );
 
 	$fee = array(
-		'amount' => - absint( $fee_amount ),
+		'amount' => - abs( $fee_amount ),
 		'label'  => edd_get_option( 'edd_wallet_cart_funds_label', __( 'Wallet Funds', 'edd-wallet' ) ),
 		'type'   => 'item',
 		'no_tax' => true,
