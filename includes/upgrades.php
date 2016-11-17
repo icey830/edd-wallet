@@ -3,7 +3,7 @@
  * Upgrades
  *
  * @package     EDD\Wallet\Upgrades
- * @since       1.2.0
+ * @since       2.0.0
  */
 
 
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Run upgrades
  *
- * @since       1.2.0
+ * @since       2.0.0
  * @return      void
  */
 function edd_wallet_run_upgrades() {

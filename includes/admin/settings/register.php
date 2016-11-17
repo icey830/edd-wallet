@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Add settings section
  *
- * @since       1.2.0
+ * @since       2.0.0
  * @param       array $sections The existing extensions sections
  * @return      array The modified extensions settings
  */
@@ -31,7 +31,7 @@ add_filter( 'edd_settings_sections_extensions', 'edd_wallet_settings_section' );
 /**
  * Register settings
  *
- * @since       1.2.0
+ * @since       2.0.0
  * @param       array $settings The existing settings
  * @return      array The updated settings
  */
