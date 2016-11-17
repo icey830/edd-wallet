@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -32,9 +32,9 @@ class EDD_DB_Wallet extends EDD_DB {
 	public function __construct() {
 	    global $wpdb;
 
-		$this->table_name   = $wpdb->prefix . 'edd_wallet';
-		$this->primary_key  = 'id';
-		$this->version      = '1.0.0';
+		$this->table_name  = $wpdb->prefix . 'edd_wallet';
+		$this->primary_key = 'id';
+		$this->version     = '1.0.0';
 	}
 
 
@@ -47,12 +47,12 @@ class EDD_DB_Wallet extends EDD_DB {
 	 */
 	public function get_columns() {
 		return array(
-			'id'            => '%d',
-			'user_id'       => '%d',
-			'payment_id'    => '%s',
-			'type'          => '%s',
-			'amount'        => '%f',
-			'date_created'  => '%s'
+			'id'           => '%d',
+			'user_id'      => '%d',
+			'payment_id'   => '%s',
+			'type'         => '%s',
+			'amount'       => '%f',
+			'date_created' => '%s'
 		);
 	}
 
@@ -66,11 +66,11 @@ class EDD_DB_Wallet extends EDD_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'user_id'       => 0,
-			'payment_id'    => 0,
-			'type'          => '',
-			'amount'        => 0.00,
-			'date_created'  => date( 'Y-m-d H:i:s' )
+			'user_id'      => 0,
+			'payment_id'   => 0,
+			'type'         => '',
+			'amount'       => 0.00,
+			'date_created' => date( 'Y-m-d H:i:s' )
 		);
 	}
 
@@ -89,7 +89,7 @@ class EDD_DB_Wallet extends EDD_DB {
 
 		$args = wp_parse_args( $data, $defaults );
 
-		if( empty( $args['user_id'] ) ) {
+		if ( empty( $args['user_id'] ) ) {
 			return false;
 		}
 
@@ -110,7 +110,7 @@ class EDD_DB_Wallet extends EDD_DB {
 	public function get_customer_wallet( $user_id = 0, $type = '' ) {
 		global $wpdb;
 
-		if( $type ) {
+		if ( $type ) {
 			$type = "AND `type`='{$type}' ";
 		}
 
@@ -131,17 +131,17 @@ class EDD_DB_Wallet extends EDD_DB {
 	public function get_customer_wallet_item( $id = 0 ) {
 		global $wpdb;
 
-		if( ! is_numeric( $id ) ) {
+		if ( ! is_numeric( $id ) ) {
 			return false;
 		}
 
 		$id = intval( $id );
 
-		if( $id < 1 ) {
+		if ( $id < 1 ) {
 			return false;
 		}
 
-		if( ! $item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE id = %s LIMIT 1", $id ) ) ) {
+		if ( ! $item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table_name WHERE id = %s LIMIT 1", $id ) ) ) {
 			return false;
 		}
 

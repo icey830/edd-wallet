@@ -14,7 +14,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -24,7 +24,7 @@ if( ! defined( 'ABSPATH' ) ) {
 define( 'EDD_WALLET_VER', '1.1.3' );
 
 
-if( ! class_exists( 'EDD_Wallet' ) ) {
+if ( ! class_exists( 'EDD_Wallet' ) ) {
 
 
 	/**
@@ -71,15 +71,15 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 * @return      self::$instance The one true EDD_Wallet
 		 */
 		public static function instance() {
-			if( ! self::$instance && function_exists( 'EDD' ) ) {
+			if ( ! self::$instance && function_exists( 'EDD' ) ) {
 				self::$instance = new EDD_Wallet();
 				self::$instance->setup_constants();
 				self::$instance->load_textdomain();
 				self::$instance->includes();
 				self::$instance->hooks();
-				self::$instance->db = new EDD_DB_Wallet();
+				self::$instance->db         = new EDD_DB_Wallet();
 				self::$instance->email_tags = new EDD_Wallet_Email_Template_Tags();
-				self::$instance->wallet = new EDD_Wallet_Helper();
+				self::$instance->wallet     = new EDD_Wallet_Helper();
 			}
 
 			return self::$instance;
@@ -110,7 +110,6 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 * @return      void
 		 */
 		private function includes() {
-
 			require_once EDD_WALLET_DIR . 'includes/scripts.php';
 			require_once EDD_WALLET_DIR . 'includes/functions.php';
 			require_once EDD_WALLET_DIR . 'includes/shortcodes.php';
@@ -123,7 +122,7 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 			require_once EDD_WALLET_DIR . 'includes/ajax-functions.php';
 			require_once EDD_WALLET_DIR . 'includes/incentive-functions.php';
 
-			if( is_admin() ) {
+			if ( is_admin() ) {
 				require_once EDD_WALLET_DIR . 'includes/admin/pages.php';
 				require_once EDD_WALLET_DIR . 'includes/admin/settings/register.php';
 				require_once EDD_WALLET_DIR . 'includes/admin/customers/customers.php';
@@ -141,15 +140,9 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 		 */
 		private function hooks() {
 			// Handle licensing
-			if( class_exists( 'EDD_License' ) ) {
+			if ( class_exists( 'EDD_License' ) ) {
 				$license = new EDD_License( __FILE__, 'Wallet', EDD_WALLET_VER, 'Daniel J Griffiths' );
 			}
-
-			// Add email settings
-			add_filter( 'edd_settings_emails', array( $this, 'email_settings' ) );
-
-			// Add style settings
-			add_filter( 'edd_settings_styles', array( $this, 'style_settings' ) );
 		}
 
 
@@ -170,125 +163,19 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
 			$mofile = sprintf( '%1$s-%2$s.mo', 'edd-wallet', $locale );
 
 			// Setup paths to current locale file
-			$mofile_local   = $lang_dir . $mofile;
-			$mofile_global  = WP_LANG_DIR . '/edd-wallet/' . $mofile;
+			$mofile_local  = $lang_dir . $mofile;
+			$mofile_global = WP_LANG_DIR . '/edd-wallet/' . $mofile;
 
-			if( file_exists( $mofile_global ) ) {
+			if ( file_exists( $mofile_global ) ) {
 				// Look in global /wp-content/languages/edd-wallet/ folder
 				load_textdomain( 'edd-wallet', $mofile_global );
-			} elseif( file_exists( $mofile_local ) ) {
+			} elseif ( file_exists( $mofile_local ) ) {
 				// Look in local /wp-content/plugins/edd-wallet/languages/ folder
 				load_textdomain( 'edd-wallet', $mofile_local );
 			} else {
 				// Load the default language files
 				load_plugin_textdomain( 'edd-wallet', false, $lang_dir );
 			}
-		}
-
-
-		/**
-		 * Register email settings
-		 *
-		 * @access      public
-		 * @since       1.0.0
-		 * @param       array $settings The existing settings
-		 * @return      array $settings The updated settings
-		 */
-		public function email_settings( $settings ) {
-			$new_settings = array(
-				'wallet_email_notifications_header' => array(
-					'id'    => 'wallet_email_notifications_header',
-					'name'  => '<strong>' . __( 'Wallet Notifications', 'edd-wallet' ) . '</strong>',
-					'desc'  => __( 'Configure wallet notification emails', 'edd-wallet' ),
-					'type'  => 'header'
-				),
-				'wallet_receipt_subject' => array(
-					'id'    => 'wallet_receipt_subject',
-					'name'  => __( 'Deposit Receipt Subject', 'edd-wallet' ),
-					'desc'  => __( 'Enter the subject line for user deposit receipts.', 'edd-wallet' ),
-					'type'  => 'text',
-					'std'   => __( 'Receipt for deposit', 'edd-wallet' )
-				),
-				'wallet_receipt' => array(
-					'id'    => 'wallet_receipt',
-					'name'  => __( 'Deposit Receipt', 'edd-wallet' ),
-					'desc'  => __( 'Enter the email that is sent to users after completion of a deposit. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list(),
-					'type'  => 'rich_editor',
-					'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {value} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
-				),
-				'wallet_admin_deposit_notification_subject' => array(
-					'id'    => 'wallet_admin_deposit_notification_subject',
-					'name'  => __( 'Admin Deposit Notification Subject', 'edd-wallet' ),
-					'desc'  => __( 'Enter the subject line for admin notifications when users deposit funds.', 'edd-wallet' ),
-					'type'  => 'text',
-					'std'   => __( 'New deposit', 'edd-wallet' )
-				),
-				'wallet_admin_deposit_notification' => array(
-					'id'    => 'wallet_admin_deposit_notification',
-					'name'  => __( 'Admin Deposit Notification', 'edd-wallet' ),
-					'desc'  => __( 'Enter the email that is sent to admins when a users deposit funds. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list(),
-					'type'  => 'rich_editor',
-					'std'   => __( 'Hello', 'edd-wallet' ) . "\n\n" . __( 'A deposit has been made.', 'edd-wallet' ) . "\n\n" . __( 'Deposited to: {fullname}', 'edd-wallet' ) . "\n" . __( 'Amount: {value}', 'edd-wallet' ) . "\n\n" . __( 'Thank you', 'edd-wallet' )
-				),
-				'wallet_admin_deposit_receipt_subject' => array(
-					'id'    => 'wallet_admin_deposit_subject',
-					'name'  => __( 'Admin Deposit Subject', 'edd-wallet' ),
-					'desc'  => __( 'Enter the subject line for admin deposit receipts.', 'edd-wallet' ),
-					'type'  => 'text',
-					'std'   => __( 'Receipt for deposit', 'edd-wallet' )
-				),
-				'wallet_admin_deposit_receipt' => array(
-					'id'    => 'wallet_admin_deposit_receipt',
-					'name'  => __( 'Admin Deposit Receipt', 'edd-wallet' ),
-					'desc'  => __( 'Enter the email that is sent to users after completion of a deposit by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
-					'type'  => 'rich_editor',
-					'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}"
-				),
-				'wallet_admin_withdrawal_receipt_subject' => array(
-					'id'    => 'wallet_admin_withdrawal_subject',
-					'name'  => __( 'Admin Withdrawal Subject', 'edd-wallet' ),
-					'desc'  => __( 'Enter the subject line for admin withdrawal receipts.', 'edd-wallet' ),
-					'type'  => 'text',
-					'std'   => __( 'Receipt for withdrawal', 'edd-wallet' )
-				),
-				'wallet_admin_withdrawal_receipt' => array(
-					'id'    => 'wallet_admin_withdrawal_receipt',
-					'name'  => __( 'Admin Withdrawal Receipt', 'edd-wallet' ),
-					'desc'  => __( 'Enter the email that is sent to users after completion of a withdraw by the admin. HTML is accepted. Available template tags:', 'edd-wallet' ) . '<br />' . edd_wallet_get_email_tags_list( 'admin' ),
-					'type'  => 'rich_editor',
-					'std'   => __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}"
-				)
-			);
-
-			return array_merge( $settings, $new_settings );
-		}
-
-
-		/**
-		 * Register style settings
-		 *
-		 * @access      public
-		 * @since       1.0.0
-		 * @param       array $settings The existing settings
-		 * @return      array $settings The updated settings
-		 */
-		public function style_settings( $settings ) {
-			$new_settings = array(
-				'wallet_style_header' => array(
-					'id'    => 'wallet_style_header',
-					'name'  => '<strong>' . __( 'Wallet Styles', 'edd-wallet' ) . '</strong>',
-					'desc'  => __( 'Configure wallet styles', 'edd-wallet' ),
-					'type'  => 'header'
-				),
-				array(
-					'id'    => 'edd_wallet_disable_styles',
-					'name'  => __( 'Disable Stylesheet', 'edd-wallet' ),
-					'desc'  => __( 'Check to disable the deposit form stylesheet and use your own styles', 'edd-wallet' ),
-					'type'  => 'checkbox'
-				)
-			);
-
-			return array_merge( $settings, $new_settings );
 		}
 	}
 }
@@ -330,7 +217,7 @@ function edd_wallet_install() {
 
 	// Add upgraded from option
 	$current_version = get_option( 'edd_wallet_version' );
-	if( $current_version ) {
+	if ( $current_version ) {
 		update_option( 'edd_wallet_version_upgraded_from', $current_version );
 	}
 
@@ -340,8 +227,11 @@ function edd_wallet_install() {
 	require_once 'includes/class.edd-db-wallet.php';
 	$wallet = new EDD_DB_Wallet();
 
-	if( ! $wallet->installed() ) {
+	if ( ! $wallet->installed() ) {
 		$wallet->create_table();
+	} else {
+		require_once 'includes/upgrades.php';
+		edd_wallet_run_upgrades();
 	}
 }
 register_activation_hook( __FILE__, 'edd_wallet_install' );
