@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -37,8 +37,8 @@ add_filter( 'edd_customer_views', 'edd_wallet_customer_view' );
  */
 function edd_wallet_customer_tabs( $tabs ) {
 	$tabs['wallet'] = array(
-		'dashicon'  => 'dashicons-money',
-		'title'     => __( 'Customer Wallet', 'edd-wallet' )
+		'dashicon' => 'dashicons-money',
+		'title'    => __( 'Customer Wallet', 'edd-wallet' )
 	);
 
 	return $tabs;
@@ -60,13 +60,13 @@ function edd_customer_wallet_view( $customer ) {
 		<?php echo get_avatar( $customer->email, 30 ); ?> <span><?php echo sprintf( __( '%s - Wallet', 'edd-wallet' ), $customer->name ); ?></span>
 	</div>
 
-	<?php if( $customer->user_id < 1 ) : ?>
+	<?php if ( $customer->user_id < 1 ) : ?>
 		<div class="error"><p><?php _e( 'This customer must be attached to a user account in order to edit their wallet', 'edd-wallet' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php do_action( 'edd_customer_wallet_before_stats', $customer ); ?>
 
-	<?php if( $customer->user_id >= 1 ) : ?>
+	<?php if ( $customer->user_id >= 1 ) : ?>
 
 		<?php $value = edd_wallet()->wallet->balance( $customer->user_id ); ?>
 
@@ -104,45 +104,45 @@ function edd_customer_wallet_view( $customer ) {
 				<tbody>
 
 				<?php
-				if( $activity ) {
-					foreach( $activity as $item ) {
+				if ( $activity ) {
+					foreach ( $activity as $item ) {
 						// Setup item type
-						switch( $item->type ) {
+						switch ( $item->type ) {
 							case 'deposit':
-								$type = __( 'Deposit', 'edd-wallet' );
+								$type    = __( 'Deposit', 'edd-wallet' );
 								$item_id = $item->id . ' (' . $item->payment_id . ')';
 								$actions = '<a title="' . __( 'View Details for Payment', 'edd-wallet' ) . ' ' . $item->payment_id . '" href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item->payment_id ) . '">' . __( 'View Details', 'edd-wallet' ) . '</a>';
-								$status = edd_get_payment_status( get_post( $item->payment_id ), true );
+								$status  = edd_get_payment_status( get_post( $item->payment_id ), true );
 								break;
 							case 'withdrawal':
-								$type = __( 'Withdraw', 'edd-wallet' );
+								$type    = __( 'Withdraw', 'edd-wallet' );
 								$item_id = $item->id . ' (' . $item->payment_id . ')';
 								$actions = '<a title="' . __( 'View Details for Payment', 'edd-wallet' ) . ' ' . $item->payment_id . '" href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item->payment_id ) . '">' . __( 'View Details', 'edd-wallet' ) . '</a>';
-								$status = edd_get_payment_status( get_post( $item->payment_id ), true );
+								$status  = edd_get_payment_status( get_post( $item->payment_id ), true );
 								break;
 							case 'admin-deposit':
-								$type = __( 'Admin Deposit', 'edd-wallet' );
+								$type    = __( 'Admin Deposit', 'edd-wallet' );
 								$item_id = $item->id;
 								$actions = '';
-								$status = __( 'Complete', 'edd-wallet' );
+								$status  = __( 'Complete', 'edd-wallet' );
 								break;
 							case 'admin-withdraw':
-								$type = __( 'Admin Withdraw', 'edd-wallet' );
+								$type    = __( 'Admin Withdraw', 'edd-wallet' );
 								$item_id = $item->id;
 								$actions = '';
-								$status = __( 'Complete', 'edd-wallet' );
+								$status  = __( 'Complete', 'edd-wallet' );
 								break;
 							case 'refund':
-								$type = __( 'Refund', 'edd-wallet' );
+								$type    = __( 'Refund', 'edd-wallet' );
 								$item_id = $item->id;
 								$actions = '';
-								$status = __( 'Complete', 'edd-wallet' );
+								$status  = __( 'Complete', 'edd-wallet' );
 								break;
 							default:
-								$type = apply_filters( 'edd_wallet_activity_type', $item->type, $item );
+								$type    = apply_filters( 'edd_wallet_activity_type', $item->type, $item );
 								$item_id = apply_filters( 'edd_wallet_activity_item_id', $item->id, $item );
 								$actions = apply_filters( 'edd_wallet_activity_actions', '', $item );
-								$status = apply_filters( 'edd_wallet_activity_status', __( 'Complete', 'edd-wallet' ), $item );
+								$status  = apply_filters( 'edd_wallet_activity_status', __( 'Complete', 'edd-wallet' ), $item );
 								break;
 						}
 						?>

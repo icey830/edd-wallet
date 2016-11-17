@@ -2,13 +2,13 @@
 /**
  * AJAX functions
  *
- * @package		EDD\Wallet\AJAX
- * @since		1.0.0
+ * @package     EDD\Wallet\AJAX
+ * @since       1.0.0
  */
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -20,7 +20,7 @@ if( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function edd_wallet_process_incentive() {
-	if( $_REQUEST['gateway'] == 'wallet' ) {
+	if ( $_REQUEST['gateway'] == 'wallet' ) {
 		EDD()->session->set( 'wallet_has_incentives', '1' );
 	} else {
 		EDD()->session->set( 'wallet_has_incentives', null );
@@ -64,11 +64,11 @@ function edd_wallet_process_apply() {
 	$fee_amount = ( $value < $total ? $value : $total );
 
 	$fee = array(
-		'amount'        => - absint( $fee_amount ),
-		'label'         => edd_get_option( 'edd_wallet_cart_funds_label', __( 'Wallet Funds', 'edd-wallet' ) ),
-		'type' => 'item',
-		'no_tax'        => true,
-		'id'            => 'edd-wallet-funds'
+		'amount' => - absint( $fee_amount ),
+		'label'  => edd_get_option( 'edd_wallet_cart_funds_label', __( 'Wallet Funds', 'edd-wallet' ) ),
+		'type'   => 'item',
+		'no_tax' => true,
+		'id'     => 'edd-wallet-funds'
 	);
 
 	EDD()->fees->add_fee( $fee );

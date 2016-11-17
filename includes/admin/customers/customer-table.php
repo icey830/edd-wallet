@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -48,7 +48,7 @@ function edd_wallet_column_data( $value, $item_id ) {
 
 	$customer = new EDD_Customer( $item_id );
 
-	if( $customer->user_id < 1 ) {
+	if ( $customer->user_id < 1 ) {
 		return '';
 	}
 

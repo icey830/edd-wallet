@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -28,25 +28,25 @@ function edd_wallet_deposit_shortcode( $atts, $content = null ) {
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$atts = shortcode_atts( array(
-		'button_text'       => __( 'Make Deposit', 'edd-wallet' ),
-		'button_style'      => edd_get_option( 'button_style', 'button' ),
-		'button_color'      => edd_get_option( 'checkout_color', 'blue' ),
-		'button_class'      => 'edd-submit'
+		'button_text'  => __( 'Make Deposit', 'edd-wallet' ),
+		'button_style' => edd_get_option( 'button_style', 'button' ),
+		'button_color' => edd_get_option( 'checkout_color', 'blue' ),
+		'button_class' => 'edd-submit'
 	), $atts, 'edd_deposit' );
 
 	// Override color if color == inherit
-	if( isset( $atts['button_color'] ) ) {
+	if ( isset( $atts['button_color'] ) ) {
 		$atts['button_color'] = ( $atts['button_color'] == 'inherit' ) ? '' : $atts['button_color'];
 	}
 
 	// Setup straight to gateway if possible
-	if( edd_shop_supports_buy_now() ) {
+	if ( edd_shop_supports_buy_now() ) {
 		$atts['direct'] = true;
 	} else {
 		$atts['direct'] = false;
 	}
 
-	$levels     = edd_get_option( 'edd_wallet_deposit_levels', array( '20', '40', '60', '80', '100', '200', '500' ) );
+	$levels = edd_get_option( 'edd_wallet_deposit_levels', array( '20', '40', '60', '80', '100', '200', '500' ) );
 	sort( $levels );
 
 	ob_start();
@@ -57,7 +57,7 @@ function edd_wallet_deposit_shortcode( $atts, $content = null ) {
 		<div id="edd_wallet_deposit_amount_wrapper">
 			<ul>
 				<?php
-				foreach( $levels as $id => $level ) {
+				foreach ( $levels as $id => $level ) {
 					$checked = ( $id == 0 ) ? ' checked="checked"' : '';
 
 					echo '<li>';
@@ -65,7 +65,7 @@ function edd_wallet_deposit_shortcode( $atts, $content = null ) {
 					echo '</li>';
 				}
 
-				if( edd_get_option( 'edd_wallet_arbitrary_deposits', false ) ) {
+				if ( edd_get_option( 'edd_wallet_arbitrary_deposits', false ) ) {
 					echo '<li>';
 					echo '<label><input type="radio" id="edd_wallet_deposit_amount" name="edd_wallet_deposit_amount" value="custom"' . $checked . '> ' . edd_get_option( 'edd_wallet_arbitrary_deposit_label', __( 'Custom Amount', 'edd-wallet' ) ) . '</label>';
 					echo '<input type="text" id="edd_wallet_custom_deposit" name="edd_wallet_custom_deposit" value="" style="display: none" />';
@@ -111,7 +111,7 @@ function edd_wallet_value_shortcode( $atts, $content = null ) {
 	), $atts, 'edd_wallet_value' );
 
 	// Bail if user isn't logged in
-	if( ! is_user_logged_in() ) {
+	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
@@ -120,7 +120,7 @@ function edd_wallet_value_shortcode( $atts, $content = null ) {
 	$value = edd_wallet()->wallet->balance( $current_user->ID );
 	$value = edd_currency_filter( edd_format_amount( $value ) );
 
-	if( $atts['wrapper'] ) {
+	if ( $atts['wrapper'] ) {
 		$value = '<span class="' . $atts['wrapper_class'] . '">' . $value . '</span>';
 	}
 

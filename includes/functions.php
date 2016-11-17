@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -39,7 +39,7 @@ function edd_wallet_get_deposit_levels() {
 		'500'
 	) );
 
-	foreach( $initial_levels as $level ) {
+	foreach ( $initial_levels as $level ) {
 		$levels[$level] = edd_currency_filter( edd_format_amount( $level ) );
 	}
 
@@ -69,7 +69,7 @@ function edd_wallet_get_email_tags_list( $type = '' ) {
 		'discount_codes',
 	);
 
-	if( $type == 'admin' ) {
+	if ( $type == 'admin' ) {
 		$unusable_tags[] = 'payment_id';
 		$unusable_tags[] = 'receipt_id';
 		$unusable_tags[] = 'payment_method';
@@ -79,7 +79,7 @@ function edd_wallet_get_email_tags_list( $type = '' ) {
 
 	$unusable_tags = apply_filters( 'edd_wallet_remove_email_tags', $unusable_tags, $type );
 
-	foreach( $unusable_tags as $tag ) {
+	foreach ( $unusable_tags as $tag ) {
 		edd_wallet_remove_email_tag( $tag );
 	}
 
@@ -115,48 +115,39 @@ function edd_wallet_get_email_tags_list( $type = '' ) {
  */
 function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-
 	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
-	if( $type == 'user' ) {
+	if ( $type == 'user' ) {
 		$payment_data = edd_get_payment_meta( $id );
 
-		if( ! edd_admin_notices_disabled( $id ) ) {
+		if ( ! edd_admin_notices_disabled( $id ) ) {
 			edd_wallet_send_admin_email( $id, $payment_data );
 		}
 
 		$from_name  = apply_filters( 'edd_purchase_from_name', $from_name, $id, $payment_data );
-
 		$from_email = apply_filters( 'edd_purchase_from_address', $from_email, $id, $payment_data );
-
 		$to_email   = edd_get_payment_user_email( $id );
-
 		$subject    = edd_get_option( 'wallet_receipt_subject', __( 'Receipt for deposit', 'edd-wallet' ) );
 		$subject    = apply_filters( 'edd_wallet_receipt_subject', wp_strip_all_tags( $subject ), $id );
 		$subject    = edd_wallet_do_email_tags( $subject, $id );
-
 		$message    = edd_get_option( 'wallet_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'Thank you for your deposit. {value} has been added to your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
 		$message    = edd_wallet_do_email_tags( $message, $id );
 	} else {
-
 		$user_data  = get_userdata( $id );
-
 		$to_email   = $user_data->user_email;
 
-		if( $type == 'admin-deposit' ) {
-			$subject    = edd_get_option( 'wallet_admin_deposit_receipt_subject', __( 'Receipt for deposit', 'edd-wallet' ) );
-			$subject    = apply_filters( 'edd_wallet_admin_deposit_subject', wp_strip_all_tags( $subject ), $id );
-			$subject    = edd_wallet_do_email_tags( $subject, $item );
-
-			$message    = edd_get_option( 'wallet_admin_deposit_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}" );
-			$message    = edd_wallet_do_email_tags( $message, $item );
+		if ( $type == 'admin-deposit' ) {
+			$subject = edd_get_option( 'wallet_admin_deposit_receipt_subject', __( 'Receipt for deposit', 'edd-wallet' ) );
+			$subject = apply_filters( 'edd_wallet_admin_deposit_subject', wp_strip_all_tags( $subject ), $id );
+			$subject = edd_wallet_do_email_tags( $subject, $item );
+			$message = edd_get_option( 'wallet_admin_deposit_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has credited your wallet {value}.', 'edd-wallet' ) . "\n\n{sitename}" );
+			$message = edd_wallet_do_email_tags( $message, $item );
 		} else {
-			$subject    = edd_get_option( 'wallet_admin_withdrawal_receipt_subject', __( 'Receipt for withdraw', 'edd-wallet' ) );
-			$subject    = apply_filters( 'edd_wallet_admin_withdrawal_subject', wp_strip_all_tags( $subject ), $id );
-			$subject    = edd_wallet_do_email_tags( $subject, $item );
-
-			$message    = edd_get_option( 'wallet_admin_withdrawal_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
-			$message    = edd_wallet_do_email_tags( $message, $item );
+			$subject = edd_get_option( 'wallet_admin_withdrawal_receipt_subject', __( 'Receipt for withdraw', 'edd-wallet' ) );
+			$subject = apply_filters( 'edd_wallet_admin_withdrawal_subject', wp_strip_all_tags( $subject ), $id );
+			$subject = edd_wallet_do_email_tags( $subject, $item );
+			$message = edd_get_option( 'wallet_admin_withdrawal_receipt', __( 'Dear', 'edd-wallet' ) . " {name},\n\n" . __( 'The site admin has deducted {value} from your wallet.', 'edd-wallet' ) . "\n\n{sitename}" );
+			$message = edd_wallet_do_email_tags( $message, $item );
 		}
 	}
 
@@ -178,21 +169,16 @@ function edd_wallet_send_email( $type = 'user', $id = 0, $item = null ) {
  * @return      void
  */
 function edd_wallet_send_admin_email( $id = 0, $item = null ) {
-	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-
-	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-
+	$from_name    = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email   = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 	$payment_data = edd_get_payment_meta( $id );
-
-	$from_name  = apply_filters( 'edd_purchase_from_name', $from_name, $id, $payment_data );
-	$from_email = apply_filters( 'edd_purchase_from_address', $from_email, $id, $payment_data );
-
-	$subject    = edd_get_option( 'wallet_admin_deposit_notification_subject', __( 'New deposit', 'edd-wallet' ) );
-	$subject    = apply_filters( 'edd_wallet_admin_deposit_notification_subject', wp_strip_all_tags( $subject ), $id );
-	$subject    = edd_wallet_do_email_tags( $subject, $id );
-
-	$message    = edd_get_option( 'wallet_admin_deposit_notification', __( 'Hello', 'edd-wallet' ) . "\n\n" . __( 'A deposit has been made.', 'edd-wallet' ) . "\n\n" . __( 'Deposited to: {fullname}', 'edd-wallet' ) . "\n" . __( 'Amount: {value}', 'edd-wallet' ) . "\n\n" . __( 'Thank you', 'edd-wallet' ) );
-	$message    = edd_wallet_do_email_tags( $message, $id );
+	$from_name    = apply_filters( 'edd_purchase_from_name', $from_name, $id, $payment_data );
+	$from_email   = apply_filters( 'edd_purchase_from_address', $from_email, $id, $payment_data );
+	$subject      = edd_get_option( 'wallet_admin_deposit_notification_subject', __( 'New deposit', 'edd-wallet' ) );
+	$subject      = apply_filters( 'edd_wallet_admin_deposit_notification_subject', wp_strip_all_tags( $subject ), $id );
+	$subject      = edd_wallet_do_email_tags( $subject, $id );
+	$message      = edd_get_option( 'wallet_admin_deposit_notification', __( 'Hello', 'edd-wallet' ) . "\n\n" . __( 'A deposit has been made.', 'edd-wallet' ) . "\n\n" . __( 'Deposited to: {fullname}', 'edd-wallet' ) . "\n" . __( 'Amount: {value}', 'edd-wallet' ) . "\n\n" . __( 'Thank you', 'edd-wallet' ) );
+	$message      = edd_wallet_do_email_tags( $message, $id );
 
 	$emails = EDD()->emails;
 

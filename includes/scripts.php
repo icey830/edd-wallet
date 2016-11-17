@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -21,7 +21,7 @@ if( ! defined( 'ABSPATH' ) ) {
  * @return      void
  */
 function edd_wallet_admin_scripts( $hook ) {
-	if( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
+	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
 		return;
 	}
 
@@ -54,17 +54,17 @@ function edd_wallet_scripts() {
 		'ajaxurl'              => admin_url( 'admin-ajax.php' )
 	) );
 
-	if( edd_get_option( 'edd_wallet_disable_styles', false ) != true ) {
+	if ( edd_get_option( 'edd_wallet_disable_styles', false ) != true ) {
 		wp_enqueue_style( 'edd-wallet-deposit', EDD_WALLET_URL . 'assets/css/deposit' . $suffix . '.css', EDD_WALLET_VER );
 	}
 
 	$fee = EDD()->fees->get_fee( 'edd-wallet-deposit' );
 
-	if( $fee ) {
+	if ( $fee ) {
 		wp_enqueue_script( 'edd-wallet-fees', EDD_WALLET_URL . 'assets/js/edd-wallet-fees' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
 	}
 
-	if( (int) edd_get_option( 'edd_wallet_incentive_amount', 0 ) > 0 ) {
+	if ( (int) edd_get_option( 'edd_wallet_incentive_amount', 0 ) > 0 ) {
 		wp_enqueue_script( 'edd-wallet-incentives', EDD_WALLET_URL . 'assets/js/edd-wallet-incentives' . $suffix . '.js', array( 'jquery' ), EDD_WALLET_VER );
 		wp_localize_script( 'edd-wallet-incentives', 'edd_wallet_incentives_vars', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' )

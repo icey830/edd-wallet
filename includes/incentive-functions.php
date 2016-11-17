@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -20,11 +20,11 @@ if( ! defined( 'ABSPATH' ) ) {
  * @return		void
  */
 function edd_wallet_maybe_remove_incentive() {
-	if( ! function_exists( 'edd_is_checkout' ) ) {
+	if ( ! function_exists( 'edd_is_checkout' ) ) {
 		return;
 	}
 
-	if( edd_get_chosen_gateway() !== 'wallet' ) {
+	if ( edd_get_chosen_gateway() !== 'wallet' ) {
 		EDD()->session->set( 'wallet_has_incentives', null );
 	}
 }
@@ -43,19 +43,19 @@ add_action( 'init', 'edd_wallet_maybe_remove_incentive' );
 function edd_wallet_item_incentive_amount( $discount, $item ) {
 	$incentive_amount = edd_get_option( 'edd_wallet_incentive_amount', 0 );
 
-	if( $incentive_amount <= 0 ) {
+	if ( $incentive_amount <= 0 ) {
 		return $discount;
 	}
 
-	if( ! EDD()->session->get( 'wallet_has_incentives' ) ) {
+	if ( ! EDD()->session->get( 'wallet_has_incentives' ) ) {
 		return $discount;
 	}
 
-	if( edd_has_variable_prices( $item['id'] ) ) {
+	if ( edd_has_variable_prices( $item['id'] ) ) {
 		$prices   = edd_get_variable_prices( $item['id'] );
 		$price_id = ( isset( $item['options']['price_id'] ) ) ? $item['options']['price_id'] : 0;
 
-		if( $price_id !== false && $price_id !== '' && isset( $prices[$price_id] ) ) {
+		if ( $price_id !== false && $price_id !== '' && isset( $prices[$price_id] ) ) {
 			$price = edd_get_price_option_amount( $item['id'], $price_id );
 		} else {
 			$price = edd_get_lowest_price_option( $item['id'] );
@@ -66,13 +66,13 @@ function edd_wallet_item_incentive_amount( $discount, $item ) {
 
 	$incentive_type = edd_get_option( 'edd_wallet_incentive_type', 'flatrate' );
 
-	if( $incentive_type == 'percent' ) {
+	if ( $incentive_type == 'percent' ) {
 
 		$incentive_amount /= 100;
 
 		$incentive_amount = ( $price * $incentive_amount );
 
-		if( edd_item_quantities_enabled() && edd_get_option( 'edd_wallet_incentive_quantities', false ) ) {
+		if ( edd_item_quantities_enabled() && edd_get_option( 'edd_wallet_incentive_quantities', false ) ) {
 			$incentive_amount *= $item['quantity'];
 		}
 
@@ -101,15 +101,15 @@ function edd_wallet_cart_items_renewal_row() {
 	$incentive_amount      = edd_get_option( 'edd_wallet_incentive_amount', 0 );
 	$incentive_description = edd_get_option( 'edd_wallet_incentive_description', __( 'Wallet Discount', 'edd-wallet' ) );
 
-	if( $incentive_amount <= 0 ) {
+	if ( $incentive_amount <= 0 ) {
 		return;
 	}
 
-	if( ! EDD()->session->get( 'wallet_has_incentives' ) ) {
+	if ( ! EDD()->session->get( 'wallet_has_incentives' ) ) {
 		return;
 	}
 
-	if( $incentive_type == 'percent' ) {
+	if ( $incentive_type == 'percent' ) {
 		$discount = $incentive_amount . '%';
 	} else {
 		$discount = edd_currency_filter( edd_sanitize_amount( $incentive_amount * edd_get_cart_quantity() ) );

@@ -8,7 +8,7 @@
 
 
 // Exit if accessed directly
-if( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -45,7 +45,7 @@ class edd_wallet_widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		// Bail if user isn't logged in
-		if( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			return;
 		}
 
@@ -86,9 +86,8 @@ class edd_wallet_widget extends WP_Widget {
 	 * @return      array $instance The updated instance
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-
-		$instance['title']            = strip_tags( $new_instance['title'] );
+		$instance          = $old_instance;
+		$instance['title'] = strip_tags( $new_instance['title'] );
 
 		return $instance;
 	}
@@ -104,7 +103,7 @@ class edd_wallet_widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$defaults = array(
-			'title'            => ''
+			'title' => ''
 		);
 
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
