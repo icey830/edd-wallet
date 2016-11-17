@@ -36,8 +36,10 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             url: edd_wallet_vars.ajaxurl,
             success: function (response) {
-                console.log(response);
+                //console.log(response.total_raw);
                 $('#edd_checkout_cart_form').replaceWith(response.html);
+                $('.edd_cart_amount').html(response.total);
+                $('.edd_cart_amount').attr('data-total', response.total_raw);
                 $('.edd_cart_wallet_row').remove();
             }
         }).fail(function (data) {
