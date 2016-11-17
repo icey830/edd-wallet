@@ -189,8 +189,8 @@ if ( ! class_exists( 'EDD_Wallet' ) ) {
  * @return      EDD_Wallet The one true EDD_Wallet
  */
 function edd_wallet() {
-	if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-		if( ! class_exists( 'S214_EDD_Activation' ) ) {
+	if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+		if ( ! class_exists( 'S214_EDD_Activation' ) ) {
 			require_once 'includes/libraries/class.s214-edd-activation.php';
 		}
 
