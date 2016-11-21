@@ -21,32 +21,41 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function edd_wallet_display_cart_row() {
 	if ( is_user_logged_in() ) {
-		// Get the current user
-		$user_id = get_current_user_id();
-
-		// Get the wallet value
-		$value = edd_wallet()->wallet->balance( $user_id );
-
-		// Get the cart total
-		$total = edd_get_cart_total();
-
-		$checkout_label = edd_get_option( 'edd_wallet_cart_label', __( 'My Wallet', 'edd-wallet' ) );
+		$value              = edd_wallet_get_user_value();
+		$total              = edd_get_cart_total();
+		$apply_funds_label  = edd_get_option( 'edd_wallet_cart_label', __( 'My Wallet', 'edd-wallet' ) );
+		$remove_funds_label = edd_get_option( 'edd_wallet_cart_remove_label', __( 'Wallet Funds Applied', 'edd-wallet' ) );
 
 		if ( edd_get_option( 'edd_wallet_show_value_in_cart', false ) ) {
-			$checkout_label .= sprintf( __( ' (%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
+			$apply_funds_label .= sprintf( __( ' (%s available)', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $value ) ) );
 		}
 
 		// Hide if funds already applied or insufficient
-		$fee           = EDD()->fees->get_fee( 'edd-wallet-funds' );
+		$wallet        = EDD()->session->get( 'wallet_applied' );
 		$allow_partial = edd_get_option( 'edd_wallet_allow_partial', false ) ? true : false;
+		$label         = ( $wallet ? $remove_funds_label : $apply_funds_label );
+		$class         = ( $wallet ? ' edd_cart_wallet_row_applied': '' );
 
-		if ( ( ( $allow_partial && $value != 0 && ! $fee ) || ( ! $allow_partial && $value >= $total && ! $fee ) ) && $total != 0 ) {
+		if ( ( ( $allow_partial && $value != 0 ) || ( ! $allow_partial && $value >= $total ) ) && $total != 0 ) {
 			$action = edd_get_option( 'edd_wallet_cart_action_label', __( 'Apply to purchase', 'edd-wallet' ) );
 			?>
-			<tr class="edd_cart_wallet_row">
-				<td colspan="2" class="edd_cart_wallet_label"><?php echo $checkout_label; ?></td>
+			<tr class="edd_cart_wallet_row<?php echo $class; ?>">
+				<td colspan="2" class="edd_cart_wallet_label"><?php echo $label; ?></td>
 				<td>
-					<a href="#" id="edd_wallet_apply_funds" data-wallet-value="<?php echo $value; ?>"><?php echo $action; ?></a>
+					<?php if ( ! $wallet ) : ?>
+						<a href="#" id="edd_wallet_apply_funds" data-wallet-action="apply"><?php echo $action; ?></a>
+					<?php else : ?>
+						<a href="#" id="edd_wallet_apply_funds" data-wallet-action="remove"><?php _e( 'Remove', 'edd-wallet' ); ?></a>
+					<?php endif; ?>
+				</td>
+			</tr>
+			<?php
+		} elseif ( $wallet && $total == 0 ) {
+			?>
+			<tr class="edd_cart_wallet_row<?php echo $class; ?>">
+				<td colspan="2" class="edd_cart_wallet_label"><?php echo $label; ?></td>
+				<td>
+					<a href="#" id="edd_wallet_apply_funds" data-wallet-action="remove"><?php _e( 'Remove', 'edd-wallet' ); ?></a>
 				</td>
 			</tr>
 			<?php
@@ -64,6 +73,7 @@ add_action( 'edd_cart_items_after', 'edd_wallet_display_cart_row' );
  * @param       string $new_status The new status of the payment
  * @param       string $old_status The old status of the payment
  * @return      void
+ * @todo        This needs to be updated for the new non-gateway/fees model. Remember that we have to take past gateway-based transactions into account for refunds.
  */
 function edd_wallet_process_transaction( $payment_id, $new_status, $old_status ) {
 	$payment = new EDD_Payment( $payment_id );
@@ -106,7 +116,7 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 		}
 
 		if ( $used_wallet !== false || $used_gateway ) {
-			$user_id       = edd_get_payment_user_id( $payment_id );
+			$user_id = edd_get_payment_user_id( $payment_id );
 
 			if ( $used_gateway ) {
 				$refund_amount = edd_get_payment_amount( $payment_id );
@@ -123,3 +133,26 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 	}
 }
 add_action( 'edd_update_payment_status', 'edd_wallet_process_transaction', 200, 3 );
+
+
+
+/**
+ * Add applied amounts to individual cart items
+ *
+ * @since       2.0.0
+ * @param       array $item The cart item data
+ * @param       int $key The cart item key
+ * @return      void
+ * @todo        I think this will fail in situations where mult-item mode is enabled. Fix it!
+ */
+function edd_wallet_display_cart_item( $item, $key ) {
+	$wallet = EDD()->session->get( 'wallet_applied' );
+
+	if( $wallet ) {
+		$label = edd_get_option( 'edd_wallet_funds_applied_label', __( 'Wallet Funds Applied', 'edd-wallet' ) );
+		?>
+		<p class="edd-wallet-applied-discount"><span><?php echo $label; ?>:</span> <?php echo edd_currency_filter( edd_format_amount( $wallet['wallet_discounts'][ $item['id'] ] ) ); ?></p>
+		<?php
+	}
+}
+add_action( 'edd_checkout_cart_item_title_after', 'edd_wallet_display_cart_item', 20, 2 );

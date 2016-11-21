@@ -23,11 +23,11 @@ jQuery(document).ready(function ($) {
     $("#edd_wallet_apply_funds").click(function (e) {
         e.preventDefault();
 
-        var value = $(this).data('wallet-value');
+        var wallet_action = $(this).data('wallet-action');
 
         var data = {
             action: 'edd_wallet_process_apply',
-            value: value
+            wallet_action: wallet_action
         };
 
         $.ajax({
@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
                 $('#edd_checkout_cart_form').replaceWith(response.html);
                 $('.edd_cart_amount').html(response.total);
                 $('.edd_cart_amount').attr('data-total', response.total_raw);
-                $('.edd_cart_wallet_row').remove();
+                location.reload(true);
             }
         }).fail(function (data) {
             if (window.console && window.console.log) {

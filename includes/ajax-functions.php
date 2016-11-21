@@ -59,19 +59,25 @@ add_action( 'wp_ajax_nopriv_edd_wallet_process_incentive', 'edd_wallet_process_i
  * @return void
  */
 function edd_wallet_process_apply() {
-	$value      = (float) $_REQUEST['value'];
-	$total      = (float) edd_get_cart_total();
-	$fee_amount = ( $value < $total ? $value : $total );
+	global $edd_wallet_discount;
 
-	$fee = array(
-		'amount' => - abs( $fee_amount ),
-		'label'  => edd_get_option( 'edd_wallet_cart_funds_label', __( 'Wallet Funds', 'edd-wallet' ) ),
-		'type'   => 'item',
-		'no_tax' => true,
-		'id'     => 'edd-wallet-funds'
-	);
+	$allow_partial = edd_get_option( 'edd_wallet_allow_partial', false ) ? true : false;
+	$cart_total    = edd_get_cart_total();
+	$wallet_value  = edd_wallet_get_user_value();
 
-	EDD()->fees->add_fee( $fee );
+	if ( $_REQUEST['wallet_action'] == 'apply' ) {
+		if ( ( ( $allow_partial && $wallet_value != 0 ) || ( ! $allow_partial && $wallet_value >= $cart_total ) ) && $cart_total != 0 ) {
+			$wallet = array(
+				'cart_total'     => $cart_total,
+				'wallet_value'   => $wallet_value,
+				'applied_amount' => ( ( $allow_partial && $wallet_value < $cart_total ) ? $wallet_value : $cart_total )
+			);
+
+			EDD()->session->set( 'wallet_applied', $wallet );
+		}
+	} else {
+		EDD()->session->set( 'wallet_applied', null );
+	}
 
 	// Refresh the cart
 	if ( empty( $_POST['billing_country'] ) ) {

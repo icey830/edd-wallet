@@ -188,3 +188,26 @@ function edd_wallet_send_admin_email( $id = 0, $item = null ) {
 
 	$emails->send( edd_get_admin_notice_emails(), $subject, $message );
 }
+
+
+/**
+ * Get the amount a user has in their Wallet
+ *
+ * @since       2.0.0
+ * @param       int $user_id The user to look up
+ * @return      float $wallet The value of a users wallet
+ */
+function edd_wallet_get_user_value( $user_id = 0 ) {
+	$wallet = 0;
+
+	// Users who aren't logged in don't have a value
+	if ( is_user_logged_in() ) {
+		if ( $user_id == 0 ) {
+			$user_id = get_current_user_id();
+		}
+
+		$wallet = edd_wallet()->wallet->balance( $user_id );
+	}
+
+	return $wallet;
+}

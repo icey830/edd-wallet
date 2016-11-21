@@ -115,6 +115,7 @@ if ( ! class_exists( 'EDD_Wallet' ) ) {
 			require_once EDD_WALLET_DIR . 'includes/shortcodes.php';
 			require_once EDD_WALLET_DIR . 'includes/widgets.php';
 			require_once EDD_WALLET_DIR . 'includes/actions.php';
+			require_once EDD_WALLET_DIR . 'includes/filters.php';
 			require_once EDD_WALLET_DIR . 'includes/deposit-functions.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-wallet-helper.php';
 			require_once EDD_WALLET_DIR . 'includes/class.edd-db-wallet.php';
