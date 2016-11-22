@@ -66,17 +66,27 @@ function edd_wallet_process_apply() {
 	$wallet_value  = edd_wallet_get_user_value();
 
 	if ( $_REQUEST['wallet_action'] == 'apply' ) {
-		if ( ( ( $allow_partial && $wallet_value != 0 ) || ( ! $allow_partial && $wallet_value >= $cart_total ) ) && $cart_total != 0 ) {
+		$cart_eligible = $cart_total != 0 && ( ( $allow_partial && $wallet_value != 0 ) || ( ! $allow_partial && $wallet_value >= $cart_total ) ) ? true : false;
+
+		if ( $cart_eligible ) {
 			$wallet = array(
 				'cart_total'     => $cart_total,
 				'wallet_value'   => $wallet_value,
-				'applied_amount' => ( ( $allow_partial && $wallet_value < $cart_total ) ? $wallet_value : $cart_total )
+				'applied_amount' => ( ( $allow_partial && $wallet_value < $cart_total ) ? $wallet_value : $cart_total ),
 			);
 
 			EDD()->session->set( 'wallet_applied', $wallet );
 		}
 	} else {
 		EDD()->session->set( 'wallet_applied', null );
+		$cart = EDD()->session->get( 'edd_cart' );
+		foreach ( $cart as $key => &$item ) {
+			if ( isset( $item['options']['wallet_amount'] ) ) {
+				unset( $item['wallet_amount'] );
+				$item['options']['recurring']['trial_period'] = false;
+			}
+		}
+		EDD()->session->set( 'edd_cart', $cart );
 	}
 
 	// Refresh the cart
@@ -86,9 +96,9 @@ function edd_wallet_process_apply() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_clean();
-	$response = array(
-		'html'         => $cart,
+	$cart_html = ob_get_clean();
+	$response  = array(
+		'html'         => $cart_html,
 		'tax_raw'      => edd_get_cart_tax(),
 		'tax'          => html_entity_decode( edd_cart_tax( false ), ENT_COMPAT, 'UTF-8' ),
 		'tax_rate_raw' => edd_get_tax_rate(),

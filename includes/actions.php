@@ -76,57 +76,36 @@ add_action( 'edd_cart_items_after', 'edd_wallet_display_cart_row' );
  * @todo        This needs to be updated for the new non-gateway/fees model. Remember that we have to take past gateway-based transactions into account for refunds.
  */
 function edd_wallet_process_transaction( $payment_id, $new_status, $old_status ) {
-	$payment = new EDD_Payment( $payment_id );
-
-	if ( $old_status == 'pending' ) {
-		$fees        = $payment->get_fees();
-		$used_wallet = false;
-
-		if ( is_array( $fees ) && count( $fees ) > 0 ) {
-			foreach ( $fees as $id => $fee ) {
-				if ( $fee['id'] == 'edd-wallet-funds' ) {
-					$used_wallet = $id;
-					continue;
-				}
+	$payment     = new EDD_Payment( $payment_id );
+	$used_wallet = 0;
+	// Check for wallet as fees
+	if ( is_array( $payment->fees ) && count( $payment->fees ) > 0 ) {
+		foreach ( $payment->fees as $id => $fee ) {
+			if ( $fee['id'] == 'edd-wallet-funds' ) {
+				$used_wallet = $fee['amount'];
+				continue;
 			}
 		}
+	} else { // Check for them as options (since issue/7)
+		foreach ( $payment->cart_details as $item ) {
+			if ( ! empty( $item['item_number']['options']['wallet_amount'] ) ) {
+				$used_wallet += $item['item_number']['options']['wallet_amount'];
+			}
+		}
+	}
 
-		if( $used_wallet !== false ) {
-			$user_id = edd_get_payment_user_id( $payment_id );
-			$amount  = abs( $fees[ $used_wallet ]['amount'] );
+	if ( ! empty( $used_wallet ) ) {
+		$user_id = $payment->user_id;
+		$amount  = abs( $used_wallet );
 
+		if ( $old_status == 'pending' ) {
 			// Withdraw the funds
 			edd_wallet()->wallet->withdraw( $user_id, $amount, 'withdrawal', $payment_id );
-
 			// Insert payment note
 			edd_insert_payment_note( $payment_id, sprintf( __( '%s withdrawn from Wallet.', 'edd-wallet' ), edd_currency_filter( edd_format_amount( $amount ) ) ) );
-		}
-	} elseif ( ( $old_status == 'publish' || $old_status == 'revoked' ) && $new_status == 'refunded' ) {
-		$fees         = $payment->get_fees();
-		$used_wallet  = false;
-		$used_gateway = edd_get_payment_gateway( $payment_id ) == 'wallet' ? true : false;
-
-		if ( ! $used_gateway && is_array( $fees ) && count( $fees ) > 0 ) {
-			foreach ( $fees as $id => $fee ) {
-				if ( $fee['id'] == 'edd-wallet-funds' ) {
-					$used_wallet = $id;
-					continue;
-				}
-			}
-		}
-
-		if ( $used_wallet !== false || $used_gateway ) {
-			$user_id = edd_get_payment_user_id( $payment_id );
-
-			if ( $used_gateway ) {
-				$refund_amount = edd_get_payment_amount( $payment_id );
-			} else {
-				$refund_amount = abs( $fees[ $used_wallet ]['amount'] );
-			}
-
+		} elseif ( ( $old_status == 'publish' || $old_status == 'revoked' ) && $new_status == 'refunded' ) {
 			// Deposit the funds
-			edd_wallet()->wallet->deposit( $user_id, $refund_amount, 'refund' );
-
+			edd_wallet()->wallet->deposit( $user_id, $amount, 'refund' );
 			// Insert payment note
 			edd_insert_payment_note( $payment_id, __( 'Refund completed to Wallet.', 'edd-wallet' ) );
 		}
@@ -151,7 +130,7 @@ function edd_wallet_display_cart_item( $item, $key ) {
 	if( $wallet ) {
 		$label = edd_get_option( 'edd_wallet_funds_applied_label', __( 'Wallet Funds Applied', 'edd-wallet' ) );
 		?>
-		<p class="edd-wallet-applied-discount"><span><?php echo $label; ?>:</span> <?php echo edd_currency_filter( edd_format_amount( $wallet['wallet_discounts'][ $item['id'] ] ) ); ?></p>
+		<p class="edd-wallet-applied-discount"><span><?php echo $label; ?>:</span> <?php echo edd_currency_filter( edd_format_amount( $wallet['wallet_discounts'][ $key ] ) ); ?></p>
 		<?php
 	}
 }
