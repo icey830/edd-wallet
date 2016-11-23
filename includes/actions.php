@@ -78,17 +78,10 @@ add_action( 'edd_cart_items_after', 'edd_wallet_display_cart_row' );
 function edd_wallet_process_transaction( $payment_id, $new_status, $old_status ) {
 	$payment     = new EDD_Payment( $payment_id );
 	$used_wallet = 0;
-	// Check for wallet as fees
-	if ( is_array( $payment->fees ) && count( $payment->fees ) > 0 ) {
-		foreach ( $payment->fees as $id => $fee ) {
-			if ( $fee['id'] == 'edd-wallet-funds' ) {
-				$used_wallet = $fee['amount'];
-				continue;
-			}
-		}
-	}
 
-	if ( empty( $used_wallet ) ) { // Check for them as options (since issue/7)
+	if( 'wallet' === $payment->gateway ) { // Check if it was a wallet gateway
+		$used_wallet = edd_get_payment_amount( $payment_id );
+	} else { // Check for them as options (since issue/7)
 		foreach ( $payment->cart_details as $item ) {
 			if ( ! empty( $item['item_number']['options']['wallet_amount'] ) ) {
 				$used_wallet += $item['item_number']['options']['wallet_amount'];
