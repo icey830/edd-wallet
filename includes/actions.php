@@ -86,7 +86,9 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 				continue;
 			}
 		}
-	} else { // Check for them as options (since issue/7)
+	}
+
+	if ( empty( $used_wallet ) ) { // Check for them as options (since issue/7)
 		foreach ( $payment->cart_details as $item ) {
 			if ( ! empty( $item['item_number']['options']['wallet_amount'] ) ) {
 				$used_wallet += $item['item_number']['options']['wallet_amount'];
