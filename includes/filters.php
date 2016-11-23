@@ -103,7 +103,7 @@ function edd_wallet_discount_amount( $discount, $item ) {
 add_filter( 'edd_get_cart_content_details_item_discount_amount', 'edd_wallet_discount_amount', 20, 2 );
 
 function edd_wallet_maybe_has_trial( $has_trial, $download_id ) {
-	if ( is_admin() && defined( 'DOING_AJAX' ) && false === DOING_AJAX ) {
+	if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || false === DOING_AJAX ) ) {
 		return $has_trial;
 	}
 
