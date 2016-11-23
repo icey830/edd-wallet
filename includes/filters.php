@@ -112,6 +112,10 @@ function edd_wallet_maybe_has_trial( $has_trial, $download_id ) {
 	}
 
 	$cart = edd_get_cart_content_details();
+	if ( empty( $cart ) ) {
+		return $has_trial;
+	}
+
 	foreach ( $cart as $key => $item ) {
 		if ( $item['id'] != $download_id ) {
 			continue;

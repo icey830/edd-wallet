@@ -148,3 +148,8 @@ function edd_wallet_process_remove_from_cart( $cart_key, $item_id ) {
 	EDD()->session->set( 'wallet_applied', $wallet );
 }
 add_action( 'edd_post_remove_from_cart', 'edd_wallet_process_remove_from_cart', 1, 2 );
+
+function edd_wallet_empty_cart() {
+	EDD()->session->set( 'wallet_applied', null );
+}
+add_action( 'edd_empty_cart', 'edd_wallet_empty_cart', 10 );
