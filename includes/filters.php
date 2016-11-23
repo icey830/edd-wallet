@@ -15,50 +15,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 function edd_wallet_discount_amount( $discount, $item ) {
 	global $edd_is_last_cart_item, $edd_wallet_discount;
 
-	$amount = 0;
+	$amount = $discount;
 	$wallet = EDD()->session->get( 'wallet_applied' );
 
 	if ( $wallet ) {
 		$items_subtotal   = 0.00;
-		$cart_items       = edd_get_cart_contents();
+		$cart             = EDD()->session->get( 'edd_cart' ); // We cannot use get_cart_contents because it gets recursive
 		$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$discounted_price = $price;
 
-		foreach ( $cart_items as $cart_item ) {
+		foreach ( $cart as $cart_item ) {
 			$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 			$items_subtotal += $item_price * $cart_item['quantity'];
 		}
 
-		$subtotal_percent   = ( ( $price * $item['quantity'] ) / $items_subtotal );
-		$discounted_amount  = $wallet['applied_amount'] * $subtotal_percent;
-		$discounted_price  -= $discounted_amount;
-
+		$subtotal_percent    = ( ( $price * $item['quantity'] ) / $items_subtotal );
+		$discounted_amount   = $wallet['applied_amount'] * $subtotal_percent;
 		$edd_wallet_discount += round( $discounted_amount, edd_currency_decimal_filter() );
 
-		if ( $edd_is_last_cart_item && $edd_wallet_discount < $wallet['applied_amount'] ) {
-			$adjustment        = $wallet['applied_amount'] - $edd_wallet_discount;
-			$discounted_price -= $adjustment;
-		}
-
-		if ( $discounted_price < 0 ) {
-			$discounted_price = 0;
-		}
-
-		$amount = ( $price - $discounted_price );
+		$amount = ( $discount + $discounted_amount );
 
 		// Add the discount details to the session
 		if( ! array_key_exists( 'wallet_discounts', $wallet ) ) {
 			$wallet['wallet_discounts'] = array();
 		}
+
 		$cart_item_position = edd_get_item_position_in_cart( $item['id'], $item['options'] );
 
-		$cart = EDD()->session->get( 'edd_cart' );
-		$cart[ $cart_item_position ]['options']['wallet_amount'] = $amount;
+		$cart[ $cart_item_position ]['options']['wallet_amount'] = round( $amount, edd_currency_decimal_filter() );
 		$item_price    = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$trial_applied = false;
 
 		if ( empty( $item_price - $amount ) ) {
 
+			// If an item is zero'd out and recurring applies, setup a free trial
 			if ( function_exists( 'EDD_Recurring' ) ) {
 				$has_variable_pricing = edd_has_variable_prices( $item['id'] );
 				if ( $has_variable_pricing ) {
@@ -81,11 +71,22 @@ function edd_wallet_discount_amount( $discount, $item ) {
 				}
 			}
 
+		} else {
+
+			// Remove the recurring settings if needed
+			if ( function_exists( 'EDD_Recurring' ) ) {
+				if ( ! empty( $cart[ $cart_item_position ]['options']['recurring']['trial_period'] ) ) {
+					$cart[ $cart_item_position ]['options']['recurring']['trial_period'] = false;
+				}
+			}
+
+		}
+		var_dump($cart[ $cart_item_position ]);
+		if ( ! empty( $cart[ $cart_item_position ]['id'] ) ) {
+			EDD()->session->set( 'edd_cart', $cart );
 		}
 
-		EDD()->session->set( 'edd_cart', $cart );
-
-		$wallet['wallet_discounts'][ $cart_item_position ]       = $amount;
+		$wallet['wallet_discounts'][ $cart_item_position ] = round( $discounted_amount, edd_currency_decimal_filter() );
 		EDD()->session->set( 'wallet_applied', $wallet );
 
 		if ( $trial_applied ) {
@@ -102,6 +103,15 @@ function edd_wallet_discount_amount( $discount, $item ) {
 add_filter( 'edd_get_cart_content_details_item_discount_amount', 'edd_wallet_discount_amount', 20, 2 );
 
 function edd_wallet_maybe_has_trial( $has_trial, $download_id ) {
+	if ( is_admin() && defined( 'DOING_AJAX' ) && false === DOING_AJAX ) {
+		return $has_trial;
+	}
+
+	$wallet = EDD()->session->get( 'wallet_applied' );
+	if ( empty( $wallet ) ) {
+		return $has_trial;
+	}
+
 	$cart = edd_get_cart_content_details();
 	foreach ( $cart as $key => $item ) {
 		if ( $item['id'] != $download_id ) {

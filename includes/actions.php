@@ -96,7 +96,7 @@ function edd_wallet_process_transaction( $payment_id, $new_status, $old_status )
 
 	if ( ! empty( $used_wallet ) ) {
 		$user_id = $payment->user_id;
-		$amount  = abs( $used_wallet );
+		$amount  = (float) $used_wallet;
 
 		if ( $old_status == 'pending' ) {
 			// Withdraw the funds
@@ -135,3 +135,14 @@ function edd_wallet_display_cart_item( $item, $key ) {
 	}
 }
 add_action( 'edd_checkout_cart_item_title_after', 'edd_wallet_display_cart_item', 20, 2 );
+
+function edd_wallet_process_remove_from_cart( $cart_key, $item_id ) {
+	$wallet = EDD()->session->get( 'wallet_applied' );
+
+	if ( ! empty( $wallet ) ) {
+		unset( $wallet['wallet_discounts'][ $cart_key ] );
+	}
+
+	EDD()->session->set( 'wallet_applied', $wallet );
+}
+add_action( 'edd_post_remove_from_cart', 'edd_wallet_process_remove_from_cart', 1, 2 );

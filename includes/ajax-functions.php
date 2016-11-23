@@ -59,8 +59,6 @@ add_action( 'wp_ajax_nopriv_edd_wallet_process_incentive', 'edd_wallet_process_i
  * @return void
  */
 function edd_wallet_process_apply() {
-	global $edd_wallet_discount;
-
 	$allow_partial = edd_get_option( 'edd_wallet_allow_partial', false ) ? true : false;
 	$cart_total    = edd_get_cart_total();
 	$wallet_value  = edd_wallet_get_user_value();
