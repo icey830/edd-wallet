@@ -20,9 +20,8 @@ function edd_wallet_discount_amount( $discount, $item ) {
 
 	if ( $wallet ) {
 		$items_subtotal   = 0.00;
-		$cart             = EDD()->session->get( 'edd_cart' ); // We cannot use get_cart_contents because it gets recursive
+		$cart             = edd_get_cart_contents();
 		$price            = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$discounted_price = $price;
 
 		foreach ( $cart as $cart_item ) {
 			$item_price      = edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
@@ -81,7 +80,7 @@ function edd_wallet_discount_amount( $discount, $item ) {
 			}
 
 		}
-		var_dump($cart[ $cart_item_position ]);
+
 		if ( ! empty( $cart[ $cart_item_position ]['id'] ) ) {
 			EDD()->session->set( 'edd_cart', $cart );
 		}
