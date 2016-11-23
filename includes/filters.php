@@ -64,7 +64,7 @@ function edd_wallet_discount_amount( $discount, $item ) {
 					}
 
 					$cart[ $cart_item_position ]['options']['recurring']['trial_period']['quantity'] = 1;
-					$cart[ $cart_item_position ]['options']['recurring']['trial_period']['period']   = $period;
+					$cart[ $cart_item_position ]['options']['recurring']['trial_period']['unit']     = $period;
 
 					$trial_applied = true;
 				}
