@@ -214,22 +214,32 @@ add_action( 'plugins_loaded', 'edd_wallet' );
  * @return      void
  */
 function edd_wallet_install() {
-	global $wpdb;
+	// Don't try to install if EDD isn't active
+	if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+		if( ! class_exists( 'S214_EDD_Activation' ) ) {
+			require_once 'includes/libraries/class.s214-edd-activation.php';
+		}
 
-	// Add upgraded from option
-	$current_version = get_option( 'edd_wallet_version' );
-	if( $current_version ) {
-		update_option( 'edd_wallet_version_upgraded_from', $current_version );
-	}
+		$activation = new S214_EDD_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
+		$activation = $activation->run();
+	} else {
+		global $wpdb;
 
-	update_option( 'edd_wallet_version', EDD_WALLET_VER );
+		// Add upgraded from option
+		$current_version = get_option( 'edd_wallet_version' );
+		if( $current_version ) {
+			update_option( 'edd_wallet_version_upgraded_from', $current_version );
+		}
 
-	// Create the wallet database table
-	require_once 'includes/class.edd-db-wallet.php';
-	$wallet = new EDD_DB_Wallet();
+		update_option( 'edd_wallet_version', EDD_WALLET_VER );
 
-	if( ! $wallet->installed() ) {
-		$wallet->create_table();
+		// Create the wallet database table
+		require_once 'includes/class.edd-db-wallet.php';
+		$wallet = new EDD_DB_Wallet();
+
+		if( ! $wallet->installed() ) {
+			$wallet->create_table();
+		}
 	}
 }
 register_activation_hook( __FILE__, 'edd_wallet_install' );
