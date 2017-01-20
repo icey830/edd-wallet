@@ -157,6 +157,13 @@ class EDD_Wallet_Gateway {
 						)
 					),
 					array(
+						'id'      => 'edd_wallet_deposit_page',
+						'name'    => __( 'Deposit Page', 'edd-wallet' ),
+						'desc'    => __( 'Select the page that contains the deposit form shortcode', 'edd-wallet' ),
+						'type'    => 'select',
+						'options' => edd_get_pages()
+					),
+					array(
 						'id'   => 'edd_wallet_incentive_settings',
 						'name' => '<strong>' . __( 'Incentive Settings', 'edd-wallet' ) . '</strong>',
 						'desc' => '',

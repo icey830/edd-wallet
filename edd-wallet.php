@@ -3,7 +3,7 @@
  * Plugin Name:     Easy Digital Downloads - Wallet
  * Plugin URI:      https://easydigitaldownloads.com/extension/wallet
  * Description:     Add a store credit system to Easy Digital Downloads
- * Version:         1.1.3
+ * Version:         1.1.4
  * Author:          Easy Digital Downloads
  * Author URI:      https://easydigitaldownloads.com
  * Text Domain:     edd-wallet
@@ -21,7 +21,7 @@ if( ! defined( 'ABSPATH' ) ) {
 
 // Plugin version needs to be accessible to both the
 // installer and the main class
-define( 'EDD_WALLET_VER', '1.1.3' );
+define( 'EDD_WALLET_VER', '1.1.4' );
 
 
 if( ! class_exists( 'EDD_Wallet' ) ) {
