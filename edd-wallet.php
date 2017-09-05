@@ -303,19 +303,24 @@ if( ! class_exists( 'EDD_Wallet' ) ) {
  */
 function edd_wallet() {
 	if( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-		if( ! class_exists( 'S214_EDD_Activation' ) ) {
-			require_once 'includes/libraries/class.s214-edd-activation.php';
-		}
-
-		$activation = new S214_EDD_Activation( plugin_dir_path( __FILE__ ), basename( __FILE__ ) );
-		$activation = $activation->run();
-
+		add_action( 'admin_notices', 'edd_wallet_edd_not_active' );
 		return EDD_Wallet::instance();
 	} else {
 		return EDD_Wallet::instance();
 	}
 }
 add_action( 'plugins_loaded', 'edd_wallet' );
+
+
+/**
+ * Display an error if EDD isn't active
+ *
+ * @since       1.1.5
+ * @return      void
+ */
+function edd_wallet_edd_not_active() {
+	echo '<div class="error"><p>' . __( 'Wallet requires Easy Digital Downloads! Please install or activate it to continue!', 'edd-wallet' ) . '</p></div>';
+}
 
 
 /**
